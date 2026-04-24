@@ -20,141 +20,51 @@
       --shadow: 0 2px 16px rgba(0, 156, 222, 0.10);
       --shadow-lg: 0 8px 32px rgba(0, 156, 222, 0.15);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: #F0F8FC;
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--blue);
-      padding: 0 40px;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 72px;
-      box-shadow: 0 4px 20px rgba(0, 156, 222, 0.3);
-    }
-
+    body { background: #F0F8FC; color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+    header { background: var(--blue); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; box-shadow: 0 4px 20px rgba(0,156,222,0.3); }
     .logo { display: flex; align-items: center; gap: 16px; }
-
-    .logo-mark {
-      width: 44px; height: 44px; background: white; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 900; color: var(--blue);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-
+    .logo-mark { width: 44px; height: 44px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: var(--blue); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
     .logo-text { font-size: 22px; font-weight: 800; color: white; }
     .logo-sub { font-size: 11px; color: rgba(255,255,255,0.75); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
-
     .header-right { display: flex; align-items: center; gap: 16px; }
-
-    .live-badge {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 14px;
-      font-size: 12px; font-weight: 700; color: white; letter-spacing: 1px; text-transform: uppercase;
-    }
-
+    .live-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: white; letter-spacing: 1px; text-transform: uppercase; }
     .live-dot { width: 8px; height: 8px; background: #7DFFD0; border-radius: 50%; animation: pulse 2s infinite; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
     .last-updated { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 600; font-family: 'DM Mono', monospace; }
-
-    .currency-toggle {
-      display: flex; align-items: center;
-      background: rgba(255,255,255,0.15); border-radius: 8px; overflow: hidden;
-    }
-
-    .currency-btn {
-      padding: 7px 14px; border: none; background: transparent;
-      color: rgba(255,255,255,0.7); font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-
+    .currency-toggle { display: flex; align-items: center; background: rgba(255,255,255,0.15); border-radius: 8px; overflow: hidden; }
+    .currency-btn { padding: 7px 14px; border: none; background: transparent; color: rgba(255,255,255,0.7); font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .currency-btn.active { background: white; color: var(--blue); }
     .fx-rate { font-size: 10px; color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; }
-
-    .controls {
-      background: white; padding: 12px 40px;
-      display: flex; align-items: center; gap: 16px;
-      border-bottom: 2px solid var(--border); box-shadow: var(--shadow);
-      flex-wrap: wrap;
-    }
-
+    .controls { background: white; padding: 12px 40px; display: flex; align-items: center; gap: 16px; border-bottom: 2px solid var(--border); box-shadow: var(--shadow); flex-wrap: wrap; }
     .controls label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
-
     .view-tabs { display: flex; gap: 4px; }
-    .view-tab {
-      padding: 7px 16px; border-radius: 8px; border: 2px solid var(--border);
-      background: var(--blue-light); color: var(--blue-dark);
-      font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
-      cursor: pointer; transition: all 0.2s;
-    }
+    .view-tab { padding: 7px 16px; border-radius: 8px; border: 2px solid var(--border); background: var(--blue-light); color: var(--blue-dark); font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .view-tab.active { background: var(--blue); color: white; border-color: var(--blue); box-shadow: 0 2px 8px rgba(0,156,222,0.3); }
     .view-tab:hover:not(.active) { border-color: var(--blue); }
-
     .controls-divider { width: 1px; height: 28px; background: var(--border); margin: 0 4px; }
-
     .market-tabs { display: flex; gap: 4px; }
-    .market-tab {
-      padding: 7px 14px; border-radius: 8px; border: 2px solid var(--border);
-      background: var(--blue-light); color: var(--blue-dark);
-      font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
-      cursor: pointer; transition: all 0.2s;
-    }
+    .market-tab { padding: 7px 14px; border-radius: 8px; border: 2px solid var(--border); background: var(--blue-light); color: var(--blue-dark); font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .market-tab.active { background: var(--blue); color: white; border-color: var(--blue); }
-
-    .refresh-btn {
-      margin-left: auto; background: var(--blue); border: none; color: white;
-      font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
-      padding: 8px 20px; border-radius: 8px; cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,156,222,0.3); transition: all 0.2s;
-    }
+    .refresh-btn { margin-left: auto; background: var(--blue); border: none; color: white; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; padding: 8px 20px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,156,222,0.3); transition: all 0.2s; }
     .refresh-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
-
-    .info-bar {
-      background: var(--blue-light); padding: 8px 40px;
-      border-bottom: 1px solid var(--border);
-      font-size: 12px; color: var(--text2); font-weight: 600;
-      display: flex; align-items: center; gap: 8px;
-    }
+    .info-bar { background: var(--blue-light); padding: 8px 40px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text2); font-weight: 600; display: flex; align-items: center; gap: 8px; }
     .info-bar span { color: var(--blue-dark); font-weight: 700; }
     .fx-notice { margin-left: auto; font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
-
     .ticker-tape { background: var(--blue-dark); padding: 9px 0; overflow: hidden; }
     .ticker-inner { display: flex; animation: ticker 35s linear infinite; white-space: nowrap; }
     .ticker-item { font-family: 'DM Mono', monospace; font-size: 12px; color: white; padding: 0 28px; }
     .ticker-sep { color: rgba(255,255,255,0.3); }
     @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
     main { padding: 28px 40px; display: grid; gap: 24px; max-width: 1600px; margin: 0 auto; }
-
     .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-
-    .stat-card {
-      background: white; border-radius: 16px; padding: 24px 28px;
-      box-shadow: var(--shadow); border: 2px solid var(--border);
-      animation: slideUp 0.5s ease forwards; opacity: 0;
-      transition: box-shadow 0.2s, transform 0.2s;
-    }
+    .stat-card { background: white; border-radius: 16px; padding: 24px 28px; box-shadow: var(--shadow); border: 2px solid var(--border); animation: slideUp 0.5s ease forwards; opacity: 0; transition: box-shadow 0.2s, transform 0.2s; }
     .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
     .stat-card:nth-child(1) { animation-delay: 0.1s; }
     .stat-card:nth-child(2) { animation-delay: 0.2s; }
     .stat-card:nth-child(3) { animation-delay: 0.3s; }
     .stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .stat-icon { font-size: 24px; margin-bottom: 10px; }
     .stat-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
     .stat-value { font-size: 44px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
@@ -163,35 +73,15 @@
     .stat-card.asins .stat-value { color: #F5A623; }
     .stat-card.snapshots .stat-value { color: #9B59B6; }
     .stat-sub { font-size: 11px; color: var(--text3); font-weight: 600; margin-top: 6px; }
-
     .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-
-    .panel {
-      background: white; border-radius: 16px;
-      box-shadow: var(--shadow); border: 2px solid var(--border);
-      overflow: hidden; animation: slideUp 0.5s ease forwards; opacity: 0;
-    }
+    .panel { background: white; border-radius: 16px; box-shadow: var(--shadow); border: 2px solid var(--border); overflow: hidden; animation: slideUp 0.5s ease forwards; opacity: 0; }
     .panel:nth-child(1) { animation-delay: 0.5s; }
     .panel:nth-child(2) { animation-delay: 0.6s; }
-
-    .panel-header {
-      padding: 16px 24px; border-bottom: 2px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--blue-light);
-    }
+    .panel-header { padding: 16px 24px; border-bottom: 2px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--blue-light); }
     .panel-title { font-size: 13px; font-weight: 800; color: var(--blue-dark); text-transform: uppercase; letter-spacing: 1px; }
-    .panel-badge {
-      font-size: 11px; font-weight: 700; color: var(--text2);
-      background: white; padding: 3px 10px; border-radius: 20px;
-      border: 1px solid var(--border); font-family: 'DM Mono', monospace;
-    }
-
+    .panel-badge { font-size: 11px; font-weight: 700; color: var(--text2); background: white; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); font-family: 'DM Mono', monospace; }
     .asin-list { padding: 4px 0; }
-    .asin-row {
-      display: grid; grid-template-columns: 28px 1fr auto auto;
-      gap: 12px; align-items: center; padding: 10px 24px;
-      border-bottom: 1px solid var(--border); transition: background 0.15s;
-    }
+    .asin-row { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 12px; align-items: center; padding: 10px 24px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
     .asin-row:last-child { border-bottom: none; }
     .asin-row:hover { background: var(--blue-light); }
     .asin-rank { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
@@ -201,30 +91,25 @@
     .asin-name { font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; font-weight: 600; }
     .asin-revenue { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); text-align: right; white-space: nowrap; }
     .asin-units { font-size: 11px; color: var(--text2); text-align: right; white-space: nowrap; font-weight: 700; background: var(--blue-light); padding: 2px 8px; border-radius: 10px; }
-
     .market-badge { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
     .market-GB { background: #E8F4FF; color: #0077A8; }
     .market-DE { background: #FFF3E0; color: #E65100; }
     .market-FR { background: #F3E5F5; color: #6A1B9A; }
-
     .chart-area { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
     .bar-row { display: grid; grid-template-columns: 120px 1fr 70px; align-items: center; gap: 12px; }
     .bar-label { font-size: 10px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'DM Mono', monospace; }
     .bar-track { height: 22px; background: var(--blue-light); border-radius: 6px; overflow: hidden; }
     .bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue) 0%, #5DCFFF 100%); border-radius: 6px; width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
     .bar-value { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue-dark); text-align: right; }
-
     .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 260px; gap: 14px; color: var(--text3); font-size: 13px; font-weight: 700; }
     .loading-bar { width: 160px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
     .loading-bar::after { content: ''; display: block; height: 100%; width: 40%; background: var(--blue); border-radius: 4px; animation: loading 1.4s ease infinite; }
     @keyframes loading { 0% { transform: translateX(-150%); } 100% { transform: translateX(400%); } }
-
     .error-msg { text-align: center; padding: 40px 24px; color: var(--red); font-size: 13px; font-weight: 600; line-height: 1.6; }
     footer { text-align: center; padding: 20px; font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: 1px; }
   </style>
 </head>
 <body>
-
   <header>
     <div class="logo">
       <div class="logo-mark">HB</div>
@@ -390,9 +275,7 @@
     }
 
     async function fetchData() {
-      const cutoff = new Date();
-      cutoff.setHours(cutoff.getHours() - 48);
-      let url = `${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&captured_at=gte.${cutoff.toISOString()}&order=captured_at.desc&limit=10000`;
+      let url = `${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&order=captured_at.desc&limit=10000`;
       if (currentMarket !== 'all') url += `&market=eq.${currentMarket}`;
       const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
       if (!res.ok) throw new Error('Failed to fetch from Supabase: ' + res.status);
@@ -403,8 +286,6 @@
       if (!rows || rows.length === 0) return null;
 
       let filteredRows = rows;
-      let windowHours = 48;
-      if (currentView === '24h') windowHours = 24;
 
       if (currentView === 'latest') {
         const latestSessions = {};
@@ -413,6 +294,7 @@
         });
         filteredRows = rows.filter(row => latestSessions[row.market] === row.session_id);
       } else {
+        const windowHours = currentView === '24h' ? 24 : 48;
         const cutoff = new Date();
         cutoff.setHours(cutoff.getHours() - windowHours);
         filteredRows = rows.filter(row => new Date(row.captured_at) >= cutoff);
@@ -442,7 +324,8 @@
 
       cachedRawAsins = Object.values(asinMap);
       cachedMeta = { latestTime: rows[0].captured_at, uniqueSessions };
-      return renderAll(cachedRawAsins, cachedMeta);
+      renderAll(cachedRawAsins, cachedMeta);
+      return true;
     }
 
     function renderAll(rawAsins, meta) {
