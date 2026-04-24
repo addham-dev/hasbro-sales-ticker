@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasbro EU Sales Ticker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #009CDE;
+      --blue-dark: #0077A8;
+      --blue-light: #E5F6FF;
+      --blue-mid: #CCF0FF;
+      --white: #ffffff;
+      --text: #003A54;
+      --text2: #5A8DA0;
+      --text3: #A0C8D8;
+      --border: #D0EAF5;
+      --green: #00B388;
+      --yellow: #FFD100;
+      --red: #E8423F;
+      --shadow: 0 2px 16px rgba(0, 156, 222, 0.10);
+      --shadow-lg: 0 8px 32px rgba(0, 156, 222, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #F0F8FC;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--blue);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      box-shadow: 0 4px 20px rgba(0, 156, 222, 0.3);
+    }
+
+    .logo { display: flex; align-items: center; gap: 16px; }
+
+    .logo-mark {
+      width: 44px; height: 44px;
+      background: white;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: var(--blue);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .logo-text { font-size: 22px; font-weight: 800; color: white; }
+    .logo-sub { font-size: 11px; color: rgba(255,255,255,0.75); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+
+    .header-right { display: flex; align-items: center; gap: 20px; }
+
+    .live-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: white; letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 8px; height: 8px; background: #7DFFD0; border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .last-updated { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 600; font-family: 'DM Mono', monospace; }
+
+    .controls {
+      background: white; padding: 12px 40px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 2px solid var(--border); box-shadow: var(--shadow);
+    }
+
+    .controls label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+
+    .controls select {
+      background: var(--blue-light); border: 2px solid var(--border);
+      color: var(--blue-dark); font-family: 'Nunito', sans-serif;
+      font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px;
+      cursor: pointer; outline: none;
+    }
+
+    .refresh-btn {
+      margin-left: auto; background: var(--blue); border: none; color: white;
+      font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+      padding: 8px 20px; border-radius: 8px; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,156,222,0.3); transition: all 0.2s;
+    }
+
+    .refresh-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    .ticker-tape { background: var(--blue-dark); padding: 9px 0; overflow: hidden; }
+
+    .ticker-inner {
+      display: flex; animation: ticker 35s linear infinite; white-space: nowrap;
+    }
+
+    .ticker-item { font-family: 'DM Mono', monospace; font-size: 12px; color: white; padding: 0 28px; }
+    .ticker-sep { color: rgba(255,255,255,0.3); }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    main { padding: 28px 40px; display: grid; gap: 24px; max-width: 1600px; margin: 0 auto; }
+
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .stat-card {
+      background: white; border-radius: 16px; padding: 28px 32px;
+      box-shadow: var(--shadow); border: 2px solid var(--border);
+      animation: slideUp 0.5s ease forwards; opacity: 0;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 12px;
+    }
+
+    .stat-card.revenue .stat-icon { background: #E5F6FF; }
+    .stat-card.units .stat-icon { background: #E5FFF6; }
+    .stat-card.asins .stat-icon { background: #FFF9E5; }
+
+    .stat-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+
+    .stat-value { font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
+
+    .stat-card.revenue .stat-value { color: var(--blue); }
+    .stat-card.units .stat-value { color: var(--green); }
+    .stat-card.asins .stat-value { color: #F5A623; }
+
+    .stat-sub { font-size: 12px; color: var(--text3); font-weight: 600; margin-top: 8px; }
+
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .panel {
+      background: white; border-radius: 16px;
+      box-shadow: var(--shadow); border: 2px solid var(--border);
+      overflow: hidden; animation: slideUp 0.5s ease forwards; opacity: 0;
+    }
+
+    .panel:nth-child(1) { animation-delay: 0.4s; }
+    .panel:nth-child(2) { animation-delay: 0.5s; }
+
+    .panel-header {
+      padding: 16px 24px; border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--blue-light);
+    }
+
+    .panel-title { font-size: 13px; font-weight: 800; color: var(--blue-dark); text-transform: uppercase; letter-spacing: 1px; }
+
+    .panel-badge {
+      font-size: 11px; font-weight: 700; color: var(--text2);
+      background: white; padding: 3px 10px; border-radius: 20px;
+      border: 1px solid var(--border); font-family: 'DM Mono', monospace;
+    }
+
+    .asin-list { padding: 4px 0; }
+
+    .asin-row {
+      display: grid; grid-template-columns: 28px 1fr auto auto;
+      gap: 12px; align-items: center; padding: 10px 24px;
+      border-bottom: 1px solid var(--border); transition: background 0.15s;
+    }
+
+    .asin-row:last-child { border-bottom: none; }
+    .asin-row:hover { background: var(--blue-light); }
+
+    .asin-rank { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
+    .asin-rank.top3 { color: var(--blue); font-weight: 700; }
+
+    .asin-info { overflow: hidden; }
+    .asin-code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); letter-spacing: 0.5px; }
+    .asin-name { font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; font-weight: 600; }
+
+    .asin-revenue { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); text-align: right; white-space: nowrap; }
+    .asin-units { font-size: 11px; color: var(--text2); text-align: right; white-space: nowrap; font-weight: 700; background: var(--blue-light); padding: 2px 8px; border-radius: 10px; }
+
+    .chart-area { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 70px; align-items: center; gap: 12px; }
+
+    .bar-label { font-size: 10px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'DM Mono', monospace; }
+
+    .bar-track { height: 22px; background: var(--blue-light); border-radius: 6px; overflow: hidden; }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue) 0%, #5DCFFF 100%);
+      border-radius: 6px; width: 0%;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bar-value { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue-dark); text-align: right; }
+
+    .loading {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 260px; gap: 14px; color: var(--text3); font-size: 13px; font-weight: 700;
+    }
+
+    .loading-bar { width: 160px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+
+    .loading-bar::after {
+      content: ''; display: block; height: 100%; width: 40%;
+      background: var(--blue); border-radius: 4px;
+      animation: loading 1.4s ease infinite;
+    }
+
+    @keyframes loading {
+      0% { transform: translateX(-150%); }
+      100% { transform: translateX(400%); }
+    }
+
+    .error-msg { text-align: center; padding: 40px 24px; color: var(--red); font-size: 13px; font-weight: 600; line-height: 1.6; }
+
+    footer { text-align: center; padding: 20px; font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark">HB</div>
+      <div>
+        <div class="logo-text">Hasbro Sales Ticker</div>
+        <div class="logo-sub">EU Real-Time Performance</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><div class="live-dot"></div>Live</div>
+      <div class="last-updated" id="last-updated">Fetching data...</div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <label>Lookback Period</label>
+    <select id="lookback-filter" onchange="loadData()">
+      <option value="all">All periods</option>
+      <option value="1">Trailing 1 hour</option>
+      <option value="2" selected>Trailing 2 hours</option>
+      <option value="24">Trailing 24 hours</option>
+      <option value="48">Trailing 48 hours</option>
+    </select>
+    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+
+  <div class="ticker-tape">
+    <div class="ticker-inner" id="ticker-inner">
+      <span class="ticker-item">Loading sales data...</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="hero-stats">
+      <div class="stat-card revenue">
+        <div class="stat-icon">💷</div>
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" id="total-revenue">—</div>
+        <div class="stat-sub" id="revenue-sub">Awaiting data</div>
+      </div>
+      <div class="stat-card units">
+        <div class="stat-icon">📦</div>
+        <div class="stat-label">Total Units</div>
+        <div class="stat-value" id="total-units">—</div>
+        <div class="stat-sub" id="units-sub">Awaiting data</div>
+      </div>
+      <div class="stat-card asins">
+        <div class="stat-icon">🏷️</div>
+        <div class="stat-label">Active ASINs</div>
+        <div class="stat-value" id="total-asins">—</div>
+        <div class="stat-sub" id="asins-sub">Awaiting data</div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Top 10 ASINs by Revenue</div>
+          <div class="panel-badge" id="snapshot-time">—</div>
+        </div>
+        <div id="asin-list-container">
+          <div class="loading"><div>Loading ASINs</div><div class="loading-bar"></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Revenue Distribution — Top 8</div>
+          <div class="panel-badge">by ASIN</div>
+        </div>
+        <div class="chart-area" id="chart-area">
+          <div class="loading"><div>Building chart</div><div class="loading-bar"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>HASBRO EU · PERFORMANCE MEDIA · REAL-TIME SALES DASHBOARD</footer>
+
+  <script>
+    const SUPABASE_URL = 'https://rycqfwzgvpzwhphgclpb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_CbKFhpN2dWI_UXhwGkclqw_AMPSprs4';
+
+    function formatCurrency(val) {
+      if (val >= 1000) return '£' + (val / 1000).toFixed(1) + 'K';
+      return '£' + val.toFixed(2);
+    }
+
+    function formatTime(iso) {
+      const d = new Date(iso);
+      return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function fetchData(lookbackHours) {
+      let url = `${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&order=captured_at.desc&limit=2000`;
+      if (lookbackHours && lookbackHours !== 'all') {
+        url += `&lookback_hours=eq.${lookbackHours}`;
+      }
+      const res = await fetch(url, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (!res.ok) throw new Error('Failed to fetch data');
+      return res.json();
+    }
+
+    function processData(rows) {
+      if (!rows || rows.length === 0) return null;
+      const latestTime = rows[0].captured_at;
+      const asinMap = {};
+      rows.forEach(row => {
+        if (!asinMap[row.asin]) {
+          asinMap[row.asin] = { asin: row.asin, product_title: row.product_title, ordered_revenue: 0, ordered_units: 0 };
+        }
+        asinMap[row.asin].ordered_revenue += row.ordered_revenue;
+        asinMap[row.asin].ordered_units += row.ordered_units;
+      });
+      const asins = Object.values(asinMap).filter(a => a.ordered_revenue > 0).sort((a, b) => b.ordered_revenue - a.ordered_revenue);
+      return {
+        asins,
+        totalRevenue: asins.reduce((s, a) => s + a.ordered_revenue, 0),
+        totalUnits: asins.reduce((s, a) => s + a.ordered_units, 0),
+        latestTime
+      };
+    }
+
+    function renderHeroStats(data) {
+      document.getElementById('total-revenue').textContent = formatCurrency(data.totalRevenue);
+      document.getElementById('total-units').textContent = data.totalUnits.toLocaleString();
+      document.getElementById('total-asins').textContent = data.asins.length;
+      document.getElementById('revenue-sub').textContent = 'GB · Trailing period';
+      document.getElementById('units-sub').textContent = 'Ordered units';
+      document.getElementById('asins-sub').textContent = 'With revenue > £0';
+      document.getElementById('last-updated').textContent = 'Updated ' + formatTime(data.latestTime);
+      document.getElementById('snapshot-time').textContent = formatTime(data.latestTime);
+    }
+
+    function renderAsinList(asins) {
+      const html = asins.slice(0, 10).map((a, i) => `
+        <div class="asin-row">
+          <div class="asin-rank ${i < 3 ? 'top3' : ''}">${String(i+1).padStart(2,'0')}</div>
+          <div class="asin-info">
+            <div class="asin-code">${a.asin}</div>
+            <div class="asin-name">${a.product_title || '—'}</div>
+          </div>
+          <div class="asin-revenue">${formatCurrency(a.ordered_revenue)}</div>
+          <div class="asin-units">${a.ordered_units} u</div>
+        </div>
+      `).join('');
+      document.getElementById('asin-list-container').innerHTML = `<div class="asin-list">${html}</div>`;
+    }
+
+    function renderChart(asins) {
+      const top8 = asins.slice(0, 8);
+      const max = top8[0].ordered_revenue;
+      document.getElementById('chart-area').innerHTML = top8.map(a => `
+        <div class="bar-row">
+          <div class="bar-label">${a.asin}</div>
+          <div class="bar-track"><div class="bar-fill" data-width="${(a.ordered_revenue/max*100).toFixed(1)}"></div></div>
+          <div class="bar-value">${formatCurrency(a.ordered_revenue)}</div>
+        </div>
+      `).join('');
+      setTimeout(() => {
+        document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.width + '%');
+      }, 100);
+    }
+
+    function renderTicker(asins) {
+      const items = asins.slice(0, 20).map(a =>
+        `<span class="ticker-item">${a.asin} <span class="ticker-sep">·</span> ${formatCurrency(a.ordered_revenue)} <span class="ticker-sep">·</span> ${a.ordered_units} units</span>`
+      ).join('');
+      document.getElementById('ticker-inner').innerHTML = items + items;
+    }
+
+    async function loadData() {
+      try {
+        const rows = await fetchData(document.getElementById('lookback-filter').value);
+        const data = processData(rows);
+        if (!data) {
+          document.getElementById('asin-list-container').innerHTML =
+            '<div class="error-msg">No data found yet.<br>Open Vendor Central Real-time Sales and let the extension capture data.</div>';
+          return;
+        }
+        renderHeroStats(data);
+        renderAsinList(data.asins);
+        renderChart(data.asins);
+        renderTicker(data.asins);
+      } catch(e) {
+        document.getElementById('asin-list-container').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
+      }
+    }
+
+    loadData();
+    setInterval(loadData, 5 * 60 * 1000);
+  </script>
+</body>
+</html>
