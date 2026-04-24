@@ -399,7 +399,7 @@
       const max = top8[0].ordered_revenue;
       document.getElementById('chart-area').innerHTML = top8.map(a => `
         <div class="bar-row">
-          <div class="bar-label">${a.asin}</div>
+          <div class="bar-label">${a.product_title ? a.product_title.substring(0, 25) + '...' : a.asin}</div>
           <div class="bar-track"><div class="bar-fill" data-width="${(a.ordered_revenue/max*100).toFixed(1)}"></div></div>
           <div class="bar-value">${formatCurrency(a.ordered_revenue)}</div>
         </div>
