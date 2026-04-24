@@ -338,10 +338,10 @@
 
     async function fetchFXRates() {
       try {
-        const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=GBP,EUR');
-        const data = await res.json();
-        fxRates.GBP_USD = 1 / data.rates.GBP;
-        fxRates.EUR_USD = 1 / data.rates.EUR;
+       const res = await fetch('https://open.er-api.com/v6/latest/USD');
+const data = await res.json();
+fxRates.GBP_USD = 1 / data.rates.GBP;
+fxRates.EUR_USD = 1 / data.rates.EUR;
         document.getElementById('fx-rate-display').textContent =
           `£1=$${fxRates.GBP_USD.toFixed(3)} · €1=$${fxRates.EUR_USD.toFixed(3)}`;
       } catch(e) {
