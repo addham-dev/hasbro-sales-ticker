@@ -238,7 +238,7 @@
         <button class="currency-btn active" id="btn-local" onclick="setCurrency('local')">£/€</button>
         <button class="currency-btn" id="btn-usd" onclick="setCurrency('usd')">$ USD</button>
       </div>
-      <span class="fx-rate" id="fx-rate-display">Fetching rates...</span>
+      <span class="fx-rate" id="fx-rate-display">£1=$1.270 · €1=$1.090</span>
       <div class="live-badge"><div class="live-dot"></div>Live</div>
       <div class="last-updated" id="last-updated">Fetching data...</div>
     </div>
@@ -336,19 +336,6 @@
     let cachedMeta = null;
     let fxRates = { GBP_USD: 1.27, EUR_USD: 1.09 };
 
-    async function fetchFXRates() {
-      try {
-       const res = await fetch('https://open.er-api.com/v6/latest/USD');
-const data = await res.json();
-fxRates.GBP_USD = 1 / data.rates.GBP;
-fxRates.EUR_USD = 1 / data.rates.EUR;
-        document.getElementById('fx-rate-display').textContent =
-          `£1=$${fxRates.GBP_USD.toFixed(3)} · €1=$${fxRates.EUR_USD.toFixed(3)}`;
-      } catch(e) {
-        document.getElementById('fx-rate-display').textContent = 'Fallback rates';
-      }
-    }
-
     function convertRevenue(value, market) {
       if (currentCurrency === 'local') return value;
       return value * ((market === 'GB') ? fxRates.GBP_USD : fxRates.EUR_USD);
@@ -380,7 +367,7 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
       document.getElementById('btn-local').classList.toggle('active', mode === 'local');
       document.getElementById('btn-usd').classList.toggle('active', mode === 'usd');
       document.getElementById('fx-notice').textContent = mode === 'usd'
-        ? `Live FX · £→$${fxRates.GBP_USD.toFixed(3)} · €→$${fxRates.EUR_USD.toFixed(3)}` : '';
+        ? `Fixed FX · £→$${fxRates.GBP_USD.toFixed(3)} · €→$${fxRates.EUR_USD.toFixed(3)}` : '';
       if (cachedRawAsins) renderAll(cachedRawAsins, cachedMeta);
     }
 
@@ -403,42 +390,32 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
     }
 
     async function fetchData() {
-      // Always fetch full 48hr window — filter client side
       const cutoff = new Date();
       cutoff.setHours(cutoff.getHours() - 48);
       let url = `${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&captured_at=gte.${cutoff.toISOString()}&order=captured_at.desc&limit=10000`;
       if (currentMarket !== 'all') url += `&market=eq.${currentMarket}`;
       const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
-      if (!res.ok) throw new Error('Failed to fetch');
+      if (!res.ok) throw new Error('Failed to fetch from Supabase: ' + res.status);
       return res.json();
     }
 
     function processData(rows) {
       if (!rows || rows.length === 0) return null;
 
-      // Apply time window filter
+      let filteredRows = rows;
       let windowHours = 48;
-      if (currentView === 'latest') windowHours = 0; // special case
       if (currentView === '24h') windowHours = 24;
 
-      let filteredRows = rows;
-
       if (currentView === 'latest') {
-        // Get the single most recent session per market
         const latestSessions = {};
         rows.forEach(row => {
           if (!latestSessions[row.market]) latestSessions[row.market] = row.session_id;
         });
         filteredRows = rows.filter(row => latestSessions[row.market] === row.session_id);
-
       } else {
-        // Filter to time window
         const cutoff = new Date();
         cutoff.setHours(cutoff.getHours() - windowHours);
         filteredRows = rows.filter(row => new Date(row.captured_at) >= cutoff);
-
-        // For each ASIN+market combo, keep only the LATEST snapshot value
-        // This avoids double counting overlapping trailing windows
         const latestPerAsin = {};
         filteredRows.forEach(row => {
           const key = `${row.asin}_${row.market}`;
@@ -449,14 +426,8 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
         filteredRows = Object.values(latestPerAsin);
       }
 
-      const uniqueSessions = new Set(rows.filter(r => {
-        if (currentView === 'latest') return true;
-        const cutoff = new Date();
-        cutoff.setHours(cutoff.getHours() - windowHours);
-        return new Date(r.captured_at) >= cutoff;
-      }).map(r => r.session_id)).size;
+      const uniqueSessions = new Set(rows.map(r => r.session_id)).size;
 
-      // Build ASIN map using latest values (not summing)
       const asinMap = {};
       filteredRows.forEach(row => {
         const key = `${row.asin}_${row.market}`;
@@ -469,28 +440,20 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
         };
       });
 
-      const rawAsins = Object.values(asinMap);
-      const meta = { latestTime: rows[0].captured_at, uniqueSessions };
-
-      cachedRawAsins = rawAsins;
-      cachedMeta = meta;
-
-      return renderAll(rawAsins, meta);
+      cachedRawAsins = Object.values(asinMap);
+      cachedMeta = { latestTime: rows[0].captured_at, uniqueSessions };
+      return renderAll(cachedRawAsins, cachedMeta);
     }
 
     function renderAll(rawAsins, meta) {
       const asins = rawAsins
-        .map(a => ({
-          ...a,
-          ordered_revenue: convertRevenue(a.ordered_revenue_local, a.market)
-        }))
+        .map(a => ({ ...a, ordered_revenue: convertRevenue(a.ordered_revenue_local, a.market) }))
         .filter(a => a.ordered_revenue > 0)
         .sort((a, b) => b.ordered_revenue - a.ordered_revenue);
 
       const totalRevenue = asins.reduce((s, a) => s + a.ordered_revenue, 0);
       const totalUnits = asins.reduce((s, a) => s + a.ordered_units, 0);
 
-      // Hero stats
       document.getElementById('total-revenue').textContent = formatCurrencyTotal(totalRevenue);
       document.getElementById('total-units').textContent = totalUnits.toLocaleString();
       document.getElementById('total-asins').textContent = asins.length;
@@ -503,7 +466,6 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
       document.getElementById('snapshot-time').textContent = formatDate(meta.latestTime);
       document.getElementById('info-sessions').textContent = `${meta.uniqueSessions} snapshot${meta.uniqueSessions !== 1 ? 's' : ''}`;
 
-      // ASIN list
       const html = asins.slice(0, 10).map((a, i) => `
         <div class="asin-row">
           <div class="asin-rank ${i < 3 ? 'top3' : ''}">${String(i+1).padStart(2,'0')}</div>
@@ -517,7 +479,6 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
       `).join('');
       document.getElementById('asin-list-container').innerHTML = `<div class="asin-list">${html}</div>`;
 
-      // Bar chart
       const top8 = asins.slice(0, 8);
       if (top8.length > 0) {
         const max = top8[0].ordered_revenue;
@@ -531,7 +492,6 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
         setTimeout(() => { document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.width + '%'); }, 100);
       }
 
-      // Ticker
       const items = asins.slice(0, 20).map(a =>
         `<span class="ticker-item">${a.asin} <span class="ticker-sep">·</span> ${a.product_title ? a.product_title.substring(0,30) : ''} <span class="ticker-sep">·</span> ${formatCurrency(a.ordered_revenue, a.market)} <span class="ticker-sep">·</span> ${a.ordered_units} units</span>`
       ).join('');
@@ -552,10 +512,8 @@ fxRates.EUR_USD = 1 / data.rates.EUR;
       }
     }
 
-    fetchFXRates();
     loadData();
     setInterval(loadData, 5 * 60 * 1000);
-    setInterval(fetchFXRates, 30 * 60 * 1000);
   </script>
 </body>
 </html>
