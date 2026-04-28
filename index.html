@@ -6,21 +6,15 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Hasbro EU Sales Ticker v2.1</title>
+  <title>Hasbro EU Sales Ticker v4</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <!-- Force no-cache on GitHub Pages -->
-  <script>
-    if(window.location.search.indexOf('v=')===-1){
-      window.location.replace(window.location.pathname+'?v=2.1');
-    }
-  </script>
+  <script>if(window.location.search.indexOf('v=')===-1){window.location.replace(window.location.pathname+'?v=4.0');}</script>
   <style>
     :root {
       --blue:#009CDE;--blue-dark:#0077A8;--blue-light:#E5F6FF;
       --bg:#F0F8FC;--white:#fff;--text:#003A54;--text2:#5A8DA0;
-      --text3:#A0C8D8;--border:#D0EAF5;--green:#00B388;--red:#E8423F;
-      --amber:#F5A623;
-      --shadow:0 2px 16px rgba(0,156,222,0.08);--shadow-lg:0 8px 32px rgba(0,156,222,0.15);
+      --text3:#A0C8D8;--border:#D0EAF5;--green:#00B388;--red:#E8423F;--amber:#F5A623;
+      --shadow:0 2px 16px rgba(0,156,222,0.08);
     }
     *{margin:0;padding:0;box-sizing:border-box;}
     body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
@@ -51,7 +45,7 @@
     .ticker-item{font-family:'DM Mono',monospace;font-size:12px;color:white;padding:0 28px;}
     .ticker-sep{color:rgba(255,255,255,0.3);}
     @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    main{padding:28px 40px;display:grid;gap:24px;max-width:1600px;margin:0 auto;}
+    main{padding:28px 40px;display:grid;gap:24px;max-width:1800px;margin:0 auto;}
     .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
     .stat-card{background:white;border-radius:16px;padding:24px 28px;box-shadow:var(--shadow);border:2px solid var(--border);}
     .stat-icon{font-size:24px;margin-bottom:10px;}
@@ -67,24 +61,24 @@
     .panel-header{padding:16px 24px;border-bottom:2px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--blue-light);}
     .panel-title{font-size:13px;font-weight:800;color:var(--blue-dark);text-transform:uppercase;letter-spacing:1px;}
     .panel-badge{font-size:11px;font-weight:700;color:var(--text2);background:white;padding:3px 10px;border-radius:20px;border:1px solid var(--border);font-family:'DM Mono',monospace;}
-    .asin-list{padding:4px 0;}
-    .asin-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:10px 24px;border-bottom:1px solid var(--border);transition:background 0.15s;}
+    .asin-list{padding:4px 0;max-height:600px;overflow-y:auto;}
+    .asin-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:8px 24px;border-bottom:1px solid var(--border);transition:background 0.15s;}
     .asin-row:last-child{border-bottom:none}.asin-row:hover{background:var(--blue-light)}
     .asin-rank{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);}
     .asin-rank.top3{color:var(--blue);font-weight:700}
     .asin-info{overflow:hidden;}
-    .asin-code{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);}
+    .asin-code{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
     .asin-name{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;font-weight:600;}
     .asin-revenue{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);text-align:right;white-space:nowrap;}
     .asin-units{font-size:11px;color:var(--text2);text-align:right;font-weight:700;background:var(--blue-light);padding:2px 8px;border-radius:10px;}
     .mp{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
     .mp-GB{background:#E8F4FF;color:#0077A8}.mp-DE{background:#FFF3E0;color:#E65100}.mp-FR{background:#F3E5F5;color:#6A1B9A}
-    .chart-area{padding:20px 24px;display:flex;flex-direction:column;gap:12px;}
-    .bar-row{display:grid;grid-template-columns:130px 1fr 70px;align-items:center;gap:12px;}
-    .bar-label{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .bar-track{height:22px;background:var(--blue-light);border-radius:6px;overflow:hidden;}
-    .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#5DCFFF);border-radius:6px;width:0%;transition:width 1s ease;}
-    .bar-value{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue-dark);text-align:right;}
+    .chart-area{padding:16px 24px;display:flex;flex-direction:column;gap:10px;max-height:600px;overflow-y:auto;}
+    .bar-row{display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:10px;}
+    .bar-label{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .bar-track{height:24px;background:var(--blue-light);border-radius:6px;overflow:hidden;position:relative;}
+    .bar-fill{height:100%;border-radius:6px;width:0%;transition:width 1s ease;}
+    .bar-value{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue-dark);text-align:right;font-weight:700;}
     .empty{text-align:center;padding:60px 24px;color:var(--text3);font-size:13px;font-weight:700;line-height:2;}
     footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);font-weight:600;letter-spacing:1px;}
   </style>
@@ -113,12 +107,12 @@
 <div class="controls">
   <label>Lookback</label>
   <div class="view-tabs">
-    <button class="view-tab active" id="tab-2"  onclick="setLookback(2,this)">2 hr</button>
-    <button class="view-tab"        id="tab-4"  onclick="setLookback(4,this)">4 hr</button>
-    <button class="view-tab"        id="tab-8"  onclick="setLookback(8,this)">8 hr</button>
-    <button class="view-tab"        id="tab-12" onclick="setLookback(12,this)">12 hr</button>
-    <button class="view-tab"        id="tab-24" onclick="setLookback(24,this)">24 hr</button>
-    <button class="view-tab"        id="tab-48" onclick="setLookback(48,this)">48 hr</button>
+    <button class="view-tab active" onclick="setLookback(2,this)">2 hr</button>
+    <button class="view-tab" onclick="setLookback(4,this)">4 hr</button>
+    <button class="view-tab" onclick="setLookback(8,this)">8 hr</button>
+    <button class="view-tab" onclick="setLookback(12,this)">12 hr</button>
+    <button class="view-tab" onclick="setLookback(24,this)">24 hr</button>
+    <button class="view-tab" onclick="setLookback(48,this)">48 hr</button>
   </div>
   <div class="divider"></div>
   <label>Market</label>
@@ -151,15 +145,15 @@
   <div class="bottom-grid">
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">Top 10 ASINs by Revenue</div>
+        <div class="panel-title">Top 20 ASINs by Revenue</div>
         <div class="panel-badge" id="panel-time">—</div>
       </div>
       <div id="asin-container"><div class="empty">Loading...</div></div>
     </div>
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">Revenue by Product — Top 8</div>
-        <div class="panel-badge">by ASIN</div>
+        <div class="panel-title">Revenue by Brand</div>
+        <div class="panel-badge" id="brand-badge">—</div>
       </div>
       <div class="chart-area" id="chart-area"></div>
     </div>
@@ -171,198 +165,246 @@
 const SUPABASE_URL = 'https://rycqfwzgvpzwhphgclpb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_CbKFhpN2dWI_UXhwGkclqw_AMPSprs4';
 
-// FX rates to convert to GBP or USD
-const FX = { EUR_TO_GBP: 0.86, GBP_TO_USD: 1.27, EUR_TO_USD: 1.09 };
+// Hardcoded FX rates
+const FX = { EUR_TO_GBP:0.86, EUR_TO_USD:1.09, GBP_TO_USD:1.27, GBP_TO_EUR:1.16 };
 
-let lookback = 2;   // hours - matches lookback_hours column
+// Brand definitions — same logic as brand health dashboard
+const BRANDS = [
+  { id:'DISNEY_KIDS', label:'Disney Kids', color:'#1565C0',
+    titleKeys:['disney','princess','frozen','encanto','lightyear','buzz lightyear','friends','saf','imf','marvel rising'],
+    brandKeys:['disney','hasbro disney','disney princess','hasbro frozen'] },
+  { id:'MARVEL', label:'Marvel', color:'#C62828',
+    titleKeys:['marvel','spider-man','spiderman','iron man','captain america','thor','hulk','avengers','black panther','deadpool'],
+    brandKeys:['marvel','hasbro marvel','marvel legends'] },
+  { id:'STAR_WARS', label:'Star Wars', color:'#212121',
+    titleKeys:['star wars','lightsaber','mandalorian','darth','yoda','luke skywalker','r2-d2','bb-8','jedi','sith','clone trooper','stormtrooper'],
+    brandKeys:['star wars','hasbro star wars'] },
+  { id:'MONOPOLY', label:'Monopoly', color:'#E65100',
+    titleKeys:['monopoly'],
+    brandKeys:['monopoly','hasbro monopoly'] },
+  { id:'GAMING', label:'Hasbro Gaming', color:'#6A1B9A',
+    titleKeys:['jenga','scrabble','battleship','risk','cluedo','clue','twister','operation','boggle','trivial pursuit','sorry','cranium','taboo','pictionary','dungeons & dragons','avalon hill'],
+    brandKeys:['hasbro gaming','hasbro games','hasbro spiele'] },
+  { id:'PLAY_DOH', label:'Play-Doh', color:'#E91E8C',
+    titleKeys:['play-doh','play doh','playdoh','pate a modeler','pâte à modeler','knete','plastilina'],
+    brandKeys:['play-doh','play doh','playdoh','hasbro play-doh'] },
+  { id:'PEPPA_PIG', label:'Peppa Pig', color:'#FF6B9D',
+    titleKeys:['peppa pig','peppa'],
+    brandKeys:['peppa pig'] },
+  { id:'TRANSFORMERS', label:'Transformers', color:'#F5A623',
+    titleKeys:['transformers','optimus prime','megatron','autobot','decepticon'],
+    brandKeys:['transformers','hasbro transformers'] },
+  { id:'BEYBLADE', label:'Beyblade', color:'#00B388',
+    titleKeys:['beyblade','bey blade'],
+    brandKeys:['beyblade','hasbro beyblade'] },
+  { id:'NERF', label:'Nerf', color:'#FF6B00',
+    titleKeys:['nerf','super soaker','supersoaker'],
+    brandKeys:['nerf','hasbro nerf','super soaker','supersoaker'] },
+  { id:'OTHER', label:'Other', color:'#A0C8D8', titleKeys:[], brandKeys:[] }
+];
+
+function classifyBrand(title) {
+  const t = (title||'').toLowerCase();
+  // Disney first (before Marvel)
+  if (BRANDS[0].titleKeys.some(k=>t.includes(k))) return BRANDS[0].id;
+  for (let i=1; i<BRANDS.length-1; i++) {
+    if (BRANDS[i].titleKeys.some(k=>t.includes(k))) return BRANDS[i].id;
+  }
+  return 'OTHER';
+}
+
+let lookback = 2;
 let market   = 'all';
 let currency = 'local';
 let allRows  = [];
 
-// ── Currency formatting ─────────────────────────────────────────────────────
+// ── Currency ──────────────────────────────────────────────────────────────────
 
-function convertValue(val, mkt) {
-  // val is always in the local currency of mkt (GBP for GB, EUR for DE/FR)
+function toSelected(val, mkt) {
   if (currency === 'local') return val;
-  if (currency === 'gbp') {
-    return mkt === 'GB' ? val : val * FX.EUR_TO_GBP;
-  }
-  if (currency === 'eur') {
-    return mkt === 'GB' ? val / FX.EUR_TO_GBP : val;
-  }
-  if (currency === 'usd') {
-    return mkt === 'GB' ? val * FX.GBP_TO_USD : val * FX.EUR_TO_USD;
-  }
+  if (currency === 'gbp')   return mkt==='GB' ? val : val * FX.EUR_TO_GBP;
+  if (currency === 'eur')   return mkt==='GB' ? val * FX.GBP_TO_EUR : val;
+  if (currency === 'usd')   return mkt==='GB' ? val * FX.GBP_TO_USD : val * FX.EUR_TO_USD;
   return val;
 }
 
-function currencySymbol(mkt) {
-  if (currency === 'local') return mkt === 'GB' ? '£' : '€';
-  if (currency === 'gbp')   return '£';
-  if (currency === 'eur')   return '€';
-  if (currency === 'usd')   return '$';
-  return '£';
+function sym(mkt) {
+  if (currency==='gbp') return '£';
+  if (currency==='eur') return '€';
+  if (currency==='usd') return '$';
+  return mkt==='GB' ? '£' : '€';
 }
 
 function fmt(val, mkt) {
-  const v = convertValue(val, mkt);
-  const sym = currencySymbol(mkt);
-  return v >= 1000 ? sym + (v / 1000).toFixed(1) + 'K' : sym + v.toFixed(0);
+  const v = toSelected(val, mkt);
+  const s = sym(mkt);
+  return v>=1000 ? s+(v/1000).toFixed(1)+'K' : s+v.toFixed(0);
 }
 
 function fmtTotal(val) {
-  // val is already converted
-  const sym = currency === 'local' ? '£/€' : currency === 'gbp' ? '£' : currency === 'eur' ? '€' : '$';
-  if (val >= 1000000) return sym + (val / 1000000).toFixed(2) + 'M';
-  if (val >= 1000)    return sym + (val / 1000).toFixed(1) + 'K';
-  return sym + val.toFixed(0);
+  const s = currency==='local'?'£/€':currency==='gbp'?'£':currency==='eur'?'€':'$';
+  if (val>=1000000) return s+(val/1000000).toFixed(2)+'M';
+  if (val>=1000)    return s+(val/1000).toFixed(1)+'K';
+  return s+val.toFixed(0);
 }
 
-function fmtTime(iso) { return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
-function fmtDate(iso) { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+function fmtTime(iso) { return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+function fmtDate(iso) { return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}); }
 
-// ── Controls ────────────────────────────────────────────────────────────────
+// ── Controls ──────────────────────────────────────────────────────────────────
 
 function setCurrency(c) {
   currency = c;
-  ['local','gbp','eur','usd'].forEach(x => document.getElementById('btn-' + x).classList.toggle('active', x === c));
+  ['local','gbp','eur','usd'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===c));
   render();
 }
 
 function setLookback(h, btn) {
   lookback = h;
-  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('info-view').textContent = 'Trailing ' + h + ' hours';
+  document.getElementById('info-view').textContent = 'Trailing '+h+' hours';
   render();
 }
 
 function setMarket(m, btn) {
   market = m;
-  document.querySelectorAll('.market-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.market-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const labels = { all: 'All markets', GB: '🇬🇧 GB only', DE: '🇩🇪 DE only', FR: '🇫🇷 FR only' };
+  const labels = {all:'All markets',GB:'🇬🇧 GB only',DE:'🇩🇪 DE only',FR:'🇫🇷 FR only'};
   document.getElementById('info-market').textContent = labels[m];
   render();
 }
 
-// ── Data loading ─────────────────────────────────────────────────────────────
+// ── Data ──────────────────────────────────────────────────────────────────────
 
 async function loadData() {
   try {
-    // Fetch last 20000 rows ordered by most recent first
     const url = `${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&order=captured_at.desc&limit=20000`;
-    const res = await fetch(url, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
+    const res = await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
     allRows = await res.json();
     render();
-  } catch (e) {
-    document.getElementById('asin-container').innerHTML = `<div class="empty">Error loading data.<br>${e.message}</div>`;
+  } catch(e) {
+    document.getElementById('asin-container').innerHTML=`<div class="empty">Error: ${e.message}</div>`;
   }
 }
 
-// ── Filtering ────────────────────────────────────────────────────────────────
-
-function getFilteredRows() {
-  let rows = allRows;
-
-  // 1. Market filter
-  if (market !== 'all') rows = rows.filter(r => r.market === market);
-
-  // 2. Lookback filter — match the lookback_hours column exactly
-  //    Use the most recent session per market for this lookback period
-  const marketsInView = market === 'all' ? ['GB', 'DE', 'FR'] : [market];
-  const latestSessionPerMarket = {};
-
-  marketsInView.forEach(mkt => {
-    // Find rows for this market + lookback, get the most recent captured_at
-    const candidates = rows.filter(r => r.market === mkt && r.lookback_hours === lookback);
-    if (candidates.length === 0) return;
-    // Most recent captured_at
-    const latestTime = candidates.reduce((best, r) => r.captured_at > best ? r.captured_at : best, '');
-    // Get the session_id for that capture
-    const latestRow = candidates.find(r => r.captured_at === latestTime);
-    if (latestRow) latestSessionPerMarket[mkt] = latestRow.session_id;
+function getSessionRows(targetLookback, targetMarket) {
+  const mkts = targetMarket==='all' ? ['GB','DE','FR'] : [targetMarket];
+  const validSessions = new Set();
+  mkts.forEach(mkt => {
+    const candidates = allRows.filter(r=>r.market===mkt && r.lookback_hours===targetLookback);
+    if (!candidates.length) return;
+    const latestTime = candidates.reduce((best,r)=>r.captured_at>best?r.captured_at:best,'');
+    const latestRow  = candidates.find(r=>r.captured_at===latestTime);
+    if (latestRow) validSessions.add(latestRow.session_id);
   });
-
-  // Keep only rows whose session_id matches the latest session for their market
-  const validSessions = new Set(Object.values(latestSessionPerMarket));
-  rows = rows.filter(r => validSessions.has(r.session_id));
-
-  // 3. Only rows with revenue
-  return rows.filter(r => r.ordered_revenue > 0);
+  return allRows.filter(r=>validSessions.has(r.session_id) && r.ordered_revenue>0);
 }
 
-// ── Rendering ────────────────────────────────────────────────────────────────
+function getPrevSessionRows(targetLookback, targetMarket) {
+  const mkts = targetMarket==='all' ? ['GB','DE','FR'] : [targetMarket];
+  const validSessions = new Set();
+  mkts.forEach(mkt => {
+    const candidates = allRows.filter(r=>r.market===mkt && r.lookback_hours===targetLookback);
+    if (!candidates.length) return;
+    const sessionMap = {};
+    candidates.forEach(r=>{
+      if (!sessionMap[r.session_id]||r.captured_at>sessionMap[r.session_id]) sessionMap[r.session_id]=r.captured_at;
+    });
+    const sessions = Object.entries(sessionMap).sort((a,b)=>b[1].localeCompare(a[1]));
+    if (sessions.length>=2) validSessions.add(sessions[1][0]);
+  });
+  return allRows.filter(r=>validSessions.has(r.session_id) && r.ordered_revenue>0);
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
 
 function render() {
-  const rows = getFilteredRows();
+  const rows = getSessionRows(lookback, market);
 
-  if (rows.length === 0) {
-    document.getElementById('asin-container').innerHTML = `<div class="empty">No data for trailing ${lookback}h.<br>Open Vendor Central Real-time Sales,<br>set the lookback to ${lookback} hours and refresh.</div>`;
-    document.getElementById('stat-revenue').textContent = '—';
-    document.getElementById('stat-units').textContent = '—';
-    document.getElementById('stat-asins').textContent = '—';
-    document.getElementById('stat-captured').textContent = '—';
-    document.getElementById('chart-area').innerHTML = '';
-    document.getElementById('info-count').textContent = 'No data';
+  if (rows.length===0) {
+    document.getElementById('asin-container').innerHTML=`<div class="empty">No data for trailing ${lookback}h.<br>Open Vendor Central, set lookback to ${lookback}hr<br>and let the extension capture.</div>`;
+    ['stat-revenue','stat-units','stat-asins','stat-captured'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('chart-area').innerHTML='';
+    document.getElementById('info-count').textContent='No data';
     return;
   }
 
-  // Sort by revenue desc
-  rows.sort((a, b) => b.ordered_revenue - a.ordered_revenue);
+  const prevRows  = getPrevSessionRows(lookback, market);
+  const prevASINs = new Set(prevRows.map(r=>r.asin+'_'+r.market));
 
-  // KPIs — convert each row to selected currency before summing
-  const totalRev   = rows.reduce((s, r) => s + convertValue(r.ordered_revenue, r.market), 0);
-  const totalUnits = rows.reduce((s, r) => s + r.ordered_units, 0);
-  const latestTime = rows.reduce((best, r) => r.captured_at > best ? r.captured_at : best, '');
+  rows.sort((a,b)=>b.ordered_revenue-a.ordered_revenue);
 
-  document.getElementById('stat-revenue').textContent     = fmtTotal(totalRev);
-  document.getElementById('stat-revenue-sub').textContent = market === 'all' ? 'GB + DE + FR' : market + ' only';
-  document.getElementById('stat-units').textContent       = totalUnits.toLocaleString();
-  document.getElementById('stat-asins').textContent       = rows.length;
-  document.getElementById('stat-captured').textContent    = fmtTime(latestTime);
-  document.getElementById('stat-captured-sub').textContent= fmtDate(latestTime);
-  document.getElementById('last-updated').textContent     = 'Updated ' + fmtTime(latestTime);
-  document.getElementById('panel-time').textContent       = fmtDate(latestTime);
-  document.getElementById('info-count').textContent       = rows.length + ' ASINs';
+  // KPIs
+  const totalRev   = rows.reduce((s,r)=>s+toSelected(r.ordered_revenue,r.market),0);
+  const totalUnits = rows.reduce((s,r)=>s+r.ordered_units,0);
+  const latestTime = rows.reduce((best,r)=>r.captured_at>best?r.captured_at:best,'');
 
-  // Top 10 ASIN list
-  const top10 = rows.slice(0, 10);
-  document.getElementById('asin-container').innerHTML = `<div class="asin-list">${
-    top10.map((r, i) => `
-      <div class="asin-row">
-        <div class="asin-rank ${i < 3 ? 'top3' : ''}">${String(i + 1).padStart(2, '0')}</div>
+  document.getElementById('stat-revenue').textContent      = fmtTotal(totalRev);
+  document.getElementById('stat-revenue-sub').textContent  = market==='all'?'GB + DE + FR':market+' only';
+  document.getElementById('stat-units').textContent        = totalUnits.toLocaleString();
+  document.getElementById('stat-asins').textContent        = rows.length;
+  document.getElementById('stat-captured').textContent     = fmtTime(latestTime);
+  document.getElementById('stat-captured-sub').textContent = fmtDate(latestTime);
+  document.getElementById('last-updated').textContent      = 'Updated '+fmtTime(latestTime);
+  document.getElementById('panel-time').textContent        = fmtDate(latestTime);
+  document.getElementById('info-count').textContent        = rows.length+' ASINs';
+
+  // Top 20 ASINs
+  const top20 = rows.slice(0,20);
+  document.getElementById('asin-container').innerHTML=`<div class="asin-list">${
+    top20.map((r,i)=>{
+      const key    = r.asin+'_'+r.market;
+      const isNew  = prevRows.length>0 && !prevASINs.has(key);
+      const fire   = isNew ? ' 🔥' : '';
+      return `<div class="asin-row">
+        <div class="asin-rank ${i<3?'top3':''}">${String(i+1).padStart(2,'0')}</div>
         <div class="asin-info">
-          <div class="asin-code">${r.asin}<span class="mp mp-${r.market}">${r.market}</span></div>
-          <div class="asin-name">${r.product_title || '—'}</div>
+          <div class="asin-code">${r.asin}<span class="mp mp-${r.market}">${r.market}</span>${fire}</div>
+          <div class="asin-name">${r.product_title||'—'}</div>
         </div>
-        <div class="asin-revenue">${fmt(r.ordered_revenue, r.market)}</div>
+        <div class="asin-revenue">${fmt(r.ordered_revenue,r.market)}</div>
         <div class="asin-units">${r.ordered_units}u</div>
-      </div>`).join('')
+      </div>`;
+    }).join('')
   }</div>`;
 
-  // Bar chart top 8
-  const top8 = rows.slice(0, 8);
-  const maxR  = convertValue(top8[0].ordered_revenue, top8[0].market);
-  document.getElementById('chart-area').innerHTML = top8.map(r => `
-    <div class="bar-row">
-      <div class="bar-label">${(r.product_title || r.asin).substring(0, 20)}</div>
-      <div class="bar-track"><div class="bar-fill" data-w="${(convertValue(r.ordered_revenue, r.market) / maxR * 100).toFixed(1)}"></div></div>
-      <div class="bar-value">${fmt(r.ordered_revenue, r.market)}</div>
-    </div>`).join('');
-  setTimeout(() => document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.w + '%'), 100);
+  // Revenue by Brand
+  const brandTotals = {};
+  rows.forEach(r => {
+    const brandId = classifyBrand(r.product_title);
+    if (!brandTotals[brandId]) brandTotals[brandId] = 0;
+    brandTotals[brandId] += toSelected(r.ordered_revenue, r.market);
+  });
 
-  // Ticker tape
-  const items = rows.slice(0, 20).map(r =>
-    `<span class="ticker-item">${r.asin} <span class="ticker-sep">·</span> ${(r.product_title || '').substring(0, 25)} <span class="ticker-sep">·</span> ${fmt(r.ordered_revenue, r.market)} <span class="ticker-sep">·</span> ${r.ordered_units}u</span>`
+  const brandData = Object.entries(brandTotals)
+    .map(([id, rev]) => ({ id, rev, brand: BRANDS.find(b=>b.id===id)||{label:id,color:'#A0C8D8'} }))
+    .filter(b => b.rev > 0)
+    .sort((a,b) => b.rev - a.rev);
+
+  const maxBrand = brandData[0]?.rev || 1;
+  document.getElementById('brand-badge').textContent = brandData.length + ' brands';
+
+  document.getElementById('chart-area').innerHTML = brandData.map(b=>`
+    <div class="bar-row">
+      <div class="bar-label">${b.brand.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" data-w="${(b.rev/maxBrand*100).toFixed(1)}" style="background:${b.brand.color};"></div>
+      </div>
+      <div class="bar-value">${fmtTotal(b.rev)}</div>
+    </div>`).join('');
+  setTimeout(()=>document.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.w+'%'),100);
+
+  // Ticker
+  const items = rows.slice(0,20).map(r=>
+    `<span class="ticker-item">${r.asin} <span class="ticker-sep">·</span> ${(r.product_title||'').substring(0,25)} <span class="ticker-sep">·</span> ${fmt(r.ordered_revenue,r.market)} <span class="ticker-sep">·</span> ${r.ordered_units}u</span>`
   ).join('');
-  document.getElementById('ticker-inner').innerHTML = items + items;
+  document.getElementById('ticker-inner').innerHTML=items+items;
 }
 
 loadData();
-setInterval(loadData, 5 * 60 * 1000);
+setInterval(loadData,5*60*1000);
 </script>
 </body>
 </html>
