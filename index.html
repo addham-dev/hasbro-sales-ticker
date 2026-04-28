@@ -18,15 +18,12 @@
       --border:     #D0EAF5;
       --green:      #00B388;
       --green-bg:   #E5FFF6;
-      --red:        #E8423F;
-      --yellow:     #FFD100;
       --shadow:     0 2px 16px rgba(0,156,222,0.10);
       --shadow-lg:  0 8px 32px rgba(0,156,222,0.15);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:var(--bg); color:var(--text); font-family:'Nunito',sans-serif; min-height:100vh; }
 
-    /* Header */
     header {
       background:var(--blue); padding:0 40px;
       display:flex; align-items:center; justify-content:space-between;
@@ -52,10 +49,8 @@
     @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
     .last-updated { font-size:12px; color:rgba(255,255,255,0.7); font-weight:600; }
 
-    /* Main */
     main { max-width:1280px; margin:0 auto; padding:32px 40px 60px; }
 
-    /* Tabs */
     .lookback-tabs {
       display:flex; gap:6px; background:white; border-radius:10px;
       padding:4px; box-shadow:var(--shadow); margin-bottom:28px; width:fit-content;
@@ -67,79 +62,88 @@
     }
     .tab-btn:hover { background:var(--blue-light); color:var(--blue); }
     .tab-btn.active { background:var(--blue); color:white; box-shadow:0 2px 8px rgba(0,156,222,0.3); }
-    .tab-btn.unavailable { opacity:0.35; cursor:default; }
-    .tab-btn.unavailable:hover { background:transparent; color:var(--text2); }
+    .tab-btn.dim { opacity:0.4; }
 
-    /* Section header */
-    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-    .section-title { font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text2); }
+    .section-title { font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text2); margin-bottom:20px; }
 
-    /* Market cards */
     .market-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:36px; }
     .market-card {
       background:white; border-radius:16px; box-shadow:var(--shadow); overflow:hidden;
       transition:transform 0.2s,box-shadow 0.2s;
     }
     .market-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
-    .card-header {
+    .card-top {
       padding:18px 22px 14px; border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between;
     }
-    .card-flag-name { display:flex; align-items:center; gap:10px; }
-    .card-flag { font-size:24px; line-height:1; }
-    .card-market-name { font-size:15px; font-weight:800; color:var(--text); }
-    .card-market-code { font-size:11px; color:var(--text2); font-weight:600; letter-spacing:1px; }
-    .card-status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); }
-    .card-status-dot.empty { background:var(--text3); }
+    .card-left { display:flex; align-items:center; gap:10px; }
+    .card-flag { font-size:24px; }
+    .card-name { font-size:15px; font-weight:800; color:var(--text); }
+    .card-code { font-size:11px; color:var(--text2); font-weight:600; letter-spacing:1px; }
+    .dot { width:8px; height:8px; border-radius:50%; }
+    .dot.green { background:var(--green); }
+    .dot.grey  { background:var(--text3); }
     .card-body { padding:20px 22px; }
-    .card-rev { font-size:36px; font-weight:900; color:var(--text); line-height:1; margin-bottom:4px; letter-spacing:-1px; }
-    .card-rev .currency { font-size:18px; color:var(--text2); font-weight:700; margin-right:2px; }
+    .card-rev {
+      font-size:36px; font-weight:900; color:var(--text);
+      line-height:1; margin-bottom:4px; letter-spacing:-1px;
+    }
+    .card-rev .cur { font-size:18px; color:var(--text2); font-weight:700; margin-right:2px; }
     .card-units { font-family:'DM Mono',monospace; font-size:12px; color:var(--text2); margin-bottom:16px; }
-    .card-footer { display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border); }
-    .card-updated { font-size:11px; color:var(--text3); font-weight:600; }
-    .live-tag { font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:var(--green); background:var(--green-bg); padding:3px 8px; border-radius:4px; }
+    .card-foot {
+      display:flex; align-items:center; justify-content:space-between;
+      padding-top:14px; border-top:1px solid var(--border);
+    }
+    .card-age { font-size:11px; color:var(--text3); font-weight:600; }
+    .tag-live {
+      font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase;
+      color:var(--green); background:var(--green-bg); padding:3px 8px; border-radius:4px;
+    }
+    .tag-none {
+      font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase;
+      color:var(--text3); background:var(--border); padding:3px 8px; border-radius:4px;
+    }
 
-    /* Table */
     .table-card { background:white; border-radius:16px; box-shadow:var(--shadow); overflow:hidden; }
     .table-toolbar {
       padding:18px 24px; border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
     }
-    .market-filters { display:flex; gap:6px; }
+    .mkt-filters { display:flex; gap:6px; }
     .mkt-btn {
-      font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.5px;
+      font-family:'Nunito',sans-serif; font-size:12px; font-weight:700;
       padding:5px 14px; border-radius:6px; border:2px solid var(--border);
       background:transparent; color:var(--text2); cursor:pointer; transition:all 0.15s;
     }
     .mkt-btn:hover { border-color:var(--blue); color:var(--blue); }
     .mkt-btn.active { background:var(--blue-light); border-color:var(--blue); color:var(--blue); }
-    .table-count { font-size:12px; color:var(--text2); font-weight:600; }
+    .tbl-count { font-size:12px; color:var(--text2); font-weight:600; }
+
     table { width:100%; border-collapse:collapse; }
     thead th {
       padding:10px 16px; font-size:11px; font-weight:800; letter-spacing:1px;
       text-transform:uppercase; color:var(--text2); background:var(--bg);
       text-align:left; border-bottom:1px solid var(--border); white-space:nowrap;
     }
-    thead th.right { text-align:right; }
+    th.r { text-align:right; }
     tbody tr { border-bottom:1px solid #F0F7FC; transition:background 0.1s; }
     tbody tr:last-child { border-bottom:none; }
     tbody tr:hover { background:var(--blue-light); }
-    tbody td { padding:11px 16px; font-size:13px; }
-    .td-rank { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); width:36px; }
-    .td-market-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; letter-spacing:0.5px; padding:3px 8px; border-radius:5px; }
-    .td-market-badge.GB { background:#E5F3FF; color:#005EA8; }
-    .td-market-badge.DE { background:#FFF8E0; color:#8A6A00; }
-    .td-market-badge.FR { background:#FFF0F0; color:#C0392B; }
-    .td-asin { font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); }
-    .td-title { color:var(--text); font-weight:600; max-width:380px; }
-    .td-rev { font-family:'DM Mono',monospace; font-weight:700; color:var(--text); text-align:right; white-space:nowrap; }
-    .td-units { font-family:'DM Mono',monospace; font-size:12px; color:var(--text2); text-align:right; }
+    td { padding:11px 16px; font-size:13px; }
+    .t-rank { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); width:36px; }
+    .badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; padding:3px 8px; border-radius:5px; }
+    .badge.GB { background:#E5F3FF; color:#005EA8; }
+    .badge.DE { background:#FFF8E0; color:#8A6A00; }
+    .badge.FR { background:#FFF0F0; color:#C0392B; }
+    .t-asin { font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); }
+    .t-title { color:var(--text); font-weight:600; max-width:380px; }
+    .t-rev { font-family:'DM Mono',monospace; font-weight:700; text-align:right; white-space:nowrap; }
+    .t-units { font-family:'DM Mono',monospace; font-size:12px; color:var(--text2); text-align:right; }
 
-    /* States */
-    .state-box { text-align:center; padding:60px 20px; }
-    .state-icon { font-size:40px; margin-bottom:12px; }
-    .state-title { font-size:18px; font-weight:800; color:var(--text); margin-bottom:6px; }
-    .state-sub { font-size:14px; color:var(--text2); font-weight:600; }
+    .empty { text-align:center; padding:60px 20px; }
+    .empty-icon { font-size:40px; margin-bottom:12px; }
+    .empty-title { font-size:18px; font-weight:800; color:var(--text); margin-bottom:6px; }
+    .empty-sub { font-size:14px; color:var(--text2); font-weight:600; }
     .spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
     @keyframes spin { to{transform:rotate(360deg)} }
 
@@ -167,251 +171,232 @@
 </header>
 
 <main>
-
-  <div class="lookback-tabs" id="lookback-tabs">
-    <button class="tab-btn active" data-hours="2">2H</button>
-    <button class="tab-btn" data-hours="4">4H</button>
-    <button class="tab-btn" data-hours="8">8H</button>
-    <button class="tab-btn" data-hours="12">12H</button>
-    <button class="tab-btn" data-hours="24">24H</button>
-    <button class="tab-btn" data-hours="48">48H</button>
+  <div class="lookback-tabs" id="tabs">
+    <button class="tab-btn active" data-h="2">2H</button>
+    <button class="tab-btn dim"    data-h="4">4H</button>
+    <button class="tab-btn dim"    data-h="8">8H</button>
+    <button class="tab-btn dim"    data-h="12">12H</button>
+    <button class="tab-btn dim"    data-h="24">24H</button>
+    <button class="tab-btn dim"    data-h="48">48H</button>
   </div>
 
-  <div class="section-header">
-    <span class="section-title">Market Summary</span>
-  </div>
-  <div class="market-grid" id="market-grid">
-    <div style="grid-column:1/-1"><div class="state-box"><div class="spinner"></div><div class="state-title">Loading…</div></div></div>
+  <div class="section-title">Market Summary</div>
+  <div class="market-grid" id="cards">
+    <div style="grid-column:1/-1"><div class="empty"><div class="spinner"></div><div class="empty-title">Loading…</div></div></div>
   </div>
 
   <div class="table-card">
     <div class="table-toolbar">
-      <div class="section-title">Top ASINs</div>
-      <div class="market-filters" id="market-filters">
-        <button class="mkt-btn active" data-market="ALL">All</button>
-        <button class="mkt-btn" data-market="GB">🇬🇧 GB</button>
-        <button class="mkt-btn" data-market="DE">🇩🇪 DE</button>
-        <button class="mkt-btn" data-market="FR">🇫🇷 FR</button>
+      <div class="section-title" style="margin:0">Top ASINs</div>
+      <div class="mkt-filters" id="mkt-filters">
+        <button class="mkt-btn active" data-m="ALL">All</button>
+        <button class="mkt-btn" data-m="GB">🇬🇧 GB</button>
+        <button class="mkt-btn" data-m="DE">🇩🇪 DE</button>
+        <button class="mkt-btn" data-m="FR">🇫🇷 FR</button>
       </div>
-      <div class="table-count" id="table-count"></div>
+      <div class="tbl-count" id="tbl-count"></div>
     </div>
-    <div id="asin-table-wrap">
-      <div class="state-box"><div class="spinner"></div><div class="state-title">Loading…</div></div>
+    <div id="tbl-wrap">
+      <div class="empty"><div class="spinner"></div><div class="empty-title">Loading…</div></div>
     </div>
   </div>
-
 </main>
 
 <script>
-const SUPABASE_URL = 'https://rycqfwzgvpzwhphgclpb.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_CbKFhpN2dWI_UXhwGkclqw_AMPSprs4';
+// ── Config ────────────────────────────────────────────────────────────────
+const SB_URL = 'https://rycqfwzgvpzwhphgclpb.supabase.co';
+const SB_KEY = 'sb_publishable_CbKFhpN2dWI_UXhwGkclqw_AMPSprs4';
+const FLAGS  = { GB:'🇬🇧', DE:'🇩🇪', FR:'🇫🇷' };
+const NAMES  = { GB:'United Kingdom', DE:'Germany', FR:'France' };
 
-const FLAGS = { GB:'🇬🇧', DE:'🇩🇪', FR:'🇫🇷' };
-const NAMES = { GB:'United Kingdom', DE:'Germany', FR:'France' };
-const ALL_HOURS = [2,4,8,12,24,48];
+let hours   = 2;
+let market  = 'ALL';
+let rows    = [];   // current ASIN rows
+let avail   = new Set(); // which lookback_hours have data
 
-let selectedHours  = 2;
-let selectedMarket = 'ALL';
-let asinRows       = [];
-let availableHours = new Set();
-
-async function sbGet(path) {
-  try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    if (!r.ok) return null;
-    return r.json();
-  } catch(e) { return null; }
+// ── Supabase ──────────────────────────────────────────────────────────────
+async function sb(path) {
+  const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
+    headers:{ 'apikey':SB_KEY, 'Authorization':`Bearer ${SB_KEY}` }
+  });
+  return r.ok ? r.json() : null;
 }
 
-async function loadData() {
+// ── Main load ─────────────────────────────────────────────────────────────
+async function load() {
   document.getElementById('last-updated').textContent = 'Refreshing…';
 
-  // ── Key insight: query by lookback_hours directly ──────────────────────
-  // The extension stores rows tagged with lookback_hours = the Vendor Central
-  // dropdown value. Revenue for that window IS the ordered_revenue figure for
-  // that specific session. We just need the LATEST session per market+lookback.
-
-  // First: find what lookback_hours values exist in the table
-  const allSessions = await sbGet(
-    `sales_snapshots?select=market,lookback_hours,captured_at&order=captured_at.desc&limit=5000`
+  // Step 1 — find every available lookback_hours and the latest captured_at per market+hours
+  // We pull the last 10000 rows of just the index columns (fast)
+  const index = await sb(
+    `sales_snapshots?select=market,lookback_hours,captured_at&order=captured_at.desc&limit=10000`
   );
 
-  if (!allSessions || allSessions.length === 0) {
-    showNoData(); return;
-  }
+  if (!index || index.length === 0) { noData(); return; }
 
-  // Build map: market+hours → latest captured_at
-  const latestSession = {}; // key: `${market}_${hours}` → captured_at
-  for (const r of allSessions) {
-    const key = `${r.market}_${r.lookback_hours}`;
-    if (!latestSession[key]) {
-      latestSession[key] = r.captured_at;
-      availableHours.add(r.lookback_hours);
-    }
+  // Build: { "GB_2": "2026-04-28T11:53:...", ... }
+  const latestTs = {};
+  for (const r of index) {
+    const k = `${r.market}_${r.lookback_hours}`;
+    if (!latestTs[k]) latestTs[k] = r.captured_at;
+    avail.add(Number(r.lookback_hours));
   }
 
   updateTabs();
 
-  // ── Load ASIN rows for selectedHours across all markets ───────────────
-  asinRows = [];
-  const markets = ['GB','DE','FR'];
-
-  for (const market of markets) {
-    const key = `${market}_${selectedHours}`;
-    const ts  = latestSession[key];
+  // Step 2 — fetch ASIN rows for selected hours, each market separately
+  rows = [];
+  for (const m of ['GB','DE','FR']) {
+    const k  = `${m}_${hours}`;
+    const ts = latestTs[k];
     if (!ts) continue;
 
-    const rows = await sbGet(
-      `sales_snapshots?market=eq.${market}&lookback_hours=eq.${selectedHours}&captured_at=eq.${encodeURIComponent(ts)}&select=market,asin,product_title,ordered_revenue,ordered_units,captured_at&order=ordered_revenue.desc`
+    const data = await sb(
+      `sales_snapshots?market=eq.${m}&lookback_hours=eq.${hours}&captured_at=eq.${encodeURIComponent(ts)}&select=market,asin,product_title,ordered_revenue,ordered_units,captured_at&order=ordered_revenue.desc&limit=500`
     );
-    if (rows) asinRows.push(...rows);
+    if (data) rows.push(...data);
   }
 
-  renderMarketCards(latestSession);
+  renderCards(latestTs);
   renderTable();
 
   document.getElementById('last-updated').textContent =
-    'Updated ' + new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+    'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
 
-function renderMarketCards(latestSession) {
-  const grid = document.getElementById('market-grid');
+// ── Market cards ──────────────────────────────────────────────────────────
+function renderCards(latestTs) {
+  document.getElementById('cards').innerHTML = ['GB','DE','FR'].map(m => {
+    const k    = `${m}_${hours}`;
+    const ts   = latestTs[k];
+    const mRow = rows.filter(r => r.market === m && r.ordered_revenue > 0);
+    const rev  = mRow.reduce((s,r) => s + r.ordered_revenue, 0);
+    const unit = mRow.reduce((s,r) => s + (r.ordered_units||0), 0);
 
-  grid.innerHTML = ['GB','DE','FR'].map(m => {
-    const key  = `${m}_${selectedHours}`;
-    const ts   = latestSession[key];
-    const rows = asinRows.filter(r => r.market === m && r.ordered_revenue > 0);
-    const rev  = rows.reduce((s,r) => s + r.ordered_revenue, 0);
-    const units= rows.reduce((s,r) => s + (r.ordered_units||0), 0);
-    const hasData = rows.length > 0;
-
-    if (!hasData) return `
+    if (!ts || mRow.length === 0) return `
       <div class="market-card">
-        <div class="card-header">
-          <div class="card-flag-name">
+        <div class="card-top">
+          <div class="card-left">
             <span class="card-flag">${FLAGS[m]}</span>
-            <div><div class="card-market-name">${NAMES[m]}</div><div class="card-market-code">${m}</div></div>
+            <div><div class="card-name">${NAMES[m]}</div><div class="card-code">${m}</div></div>
           </div>
-          <div class="card-status-dot empty"></div>
+          <div class="dot grey"></div>
         </div>
         <div class="card-body">
-          <div class="card-rev"><span class="currency">€</span>—</div>
-          <div class="card-units">No ${selectedHours}H data — run extension on ${m} market</div>
-          <div class="card-footer"><div class="card-updated">—</div></div>
+          <div class="card-rev"><span class="cur">€</span>—</div>
+          <div class="card-units">No ${hours}H data — open Vendor Central ${m} with ${hours}H selected</div>
+          <div class="card-foot"><div class="card-age">—</div><div class="tag-none">No data</div></div>
         </div>
       </div>`;
 
     return `
       <div class="market-card">
-        <div class="card-header">
-          <div class="card-flag-name">
+        <div class="card-top">
+          <div class="card-left">
             <span class="card-flag">${FLAGS[m]}</span>
-            <div><div class="card-market-name">${NAMES[m]}</div><div class="card-market-code">${m}</div></div>
+            <div><div class="card-name">${NAMES[m]}</div><div class="card-code">${m}</div></div>
           </div>
-          <div class="card-status-dot"></div>
+          <div class="dot green"></div>
         </div>
         <div class="card-body">
-          <div class="card-rev"><span class="currency">€</span>${fmt(rev)}</div>
-          <div class="card-units">${units.toLocaleString()} units</div>
-          <div class="card-footer">
-            <div class="card-updated">Captured ${timeAgo(ts)}</div>
-            <div class="live-tag">${selectedHours}H Window</div>
+          <div class="card-rev"><span class="cur">€</span>${fmt(rev)}</div>
+          <div class="card-units">${unit.toLocaleString()} units</div>
+          <div class="card-foot">
+            <div class="card-age">Captured ${ago(ts)}</div>
+            <div class="tag-live">${hours}H Window</div>
           </div>
         </div>
       </div>`;
   }).join('');
 }
 
+// ── ASIN table ────────────────────────────────────────────────────────────
 function renderTable() {
-  const wrap = document.getElementById('asin-table-wrap');
-  let rows = asinRows.filter(r => r.ordered_revenue > 0);
-  if (selectedMarket !== 'ALL') rows = rows.filter(r => r.market === selectedMarket);
-  rows = rows.sort((a,b) => b.ordered_revenue - a.ordered_revenue).slice(0,100);
+  let data = rows.filter(r => r.ordered_revenue > 0);
+  if (market !== 'ALL') data = data.filter(r => r.market === market);
+  data = data.sort((a,b) => b.ordered_revenue - a.ordered_revenue).slice(0,100);
 
-  document.getElementById('table-count').textContent = `${rows.length} products`;
+  document.getElementById('tbl-count').textContent = data.length + ' products';
 
-  if (rows.length === 0) {
-    wrap.innerHTML = `<div class="state-box">
-      <div class="state-icon">📭</div>
-      <div class="state-title">No data for ${selectedHours}H window</div>
-      <div class="state-sub">Switch Vendor Central to the ${selectedHours}H lookback and reload the page with the extension running</div>
-    </div>`;
+  if (data.length === 0) {
+    document.getElementById('tbl-wrap').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">No data for ${hours}H window</div>
+        <div class="empty-sub">On Vendor Central, set Lookback to ${hours} hours then reload the page</div>
+      </div>`;
     return;
   }
 
-  wrap.innerHTML = `
+  document.getElementById('tbl-wrap').innerHTML = `
     <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Market</th><th>ASIN</th><th>Product</th>
-          <th class="right">Revenue</th><th class="right">Units</th>
-        </tr>
-      </thead>
+      <thead><tr>
+        <th>#</th><th>Market</th><th>ASIN</th><th>Product</th>
+        <th class="r">Revenue</th><th class="r">Units</th>
+      </tr></thead>
       <tbody>
-        ${rows.map((r,i) => `
+        ${data.map((r,i) => `
           <tr>
-            <td class="td-rank">${i+1}</td>
-            <td><span class="td-market-badge ${r.market}">${FLAGS[r.market]} ${r.market}</span></td>
-            <td class="td-asin">${r.asin||'—'}</td>
-            <td class="td-title">${r.product_title ? trunc(r.product_title,60) : '—'}</td>
-            <td class="td-rev">€${fmt(r.ordered_revenue)}</td>
-            <td class="td-units">${(r.ordered_units||0).toLocaleString()}</td>
+            <td class="t-rank">${i+1}</td>
+            <td><span class="badge ${r.market}">${FLAGS[r.market]} ${r.market}</span></td>
+            <td class="t-asin">${r.asin||'—'}</td>
+            <td class="t-title">${r.product_title ? clip(r.product_title,60) : '—'}</td>
+            <td class="t-rev">€${fmt(r.ordered_revenue)}</td>
+            <td class="t-units">${(r.ordered_units||0).toLocaleString()}</td>
           </tr>`).join('')}
       </tbody>
     </table>`;
 }
 
+// ── Tabs ──────────────────────────────────────────────────────────────────
 function updateTabs() {
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    const h = parseInt(btn.dataset.hours);
-    btn.classList.toggle('active', h === selectedHours);
-    btn.classList.toggle('unavailable', !availableHours.has(h));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    const h = Number(b.dataset.h);
+    b.classList.toggle('active', h === hours);
+    b.classList.toggle('dim',    !avail.has(h));
   });
 }
 
-function showNoData() {
-  document.getElementById('market-grid').innerHTML = `
-    <div style="grid-column:1/-1"><div class="state-box">
-      <div class="state-icon">🔌</div>
-      <div class="state-title">No data found</div>
-      <div class="state-sub">Run the extension on Vendor Central to start populating data</div>
+function noData() {
+  document.getElementById('cards').innerHTML = `
+    <div style="grid-column:1/-1"><div class="empty">
+      <div class="empty-icon">🔌</div>
+      <div class="empty-title">No data found</div>
+      <div class="empty-sub">Open Vendor Central Real-time Sales and let the extension capture</div>
     </div></div>`;
   document.getElementById('last-updated').textContent = 'No data';
 }
 
-document.getElementById('lookback-tabs').addEventListener('click', e => {
-  const btn = e.target.closest('.tab-btn');
-  if (!btn || btn.classList.contains('unavailable')) return;
-  selectedHours = parseInt(btn.dataset.hours);
-  loadData();
+// ── Events ────────────────────────────────────────────────────────────────
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab-btn');
+  if (!b) return;
+  hours = Number(b.dataset.h);
+  load();
 });
 
-document.getElementById('market-filters').addEventListener('click', e => {
-  const btn = e.target.closest('.mkt-btn');
-  if (!btn) return;
-  selectedMarket = btn.dataset.market;
-  document.querySelectorAll('.mkt-btn').forEach(b => b.classList.toggle('active', b===btn));
+document.getElementById('mkt-filters').addEventListener('click', e => {
+  const b = e.target.closest('.mkt-btn');
+  if (!b) return;
+  market = b.dataset.m;
+  document.querySelectorAll('.mkt-btn').forEach(x => x.classList.toggle('active', x===b));
   renderTable();
 });
 
-function fmt(n) {
-  if (n==null||isNaN(n)) return '—';
-  return Number(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-function trunc(s,n) { return s.length>n ? s.slice(0,n)+'…' : s; }
-function timeAgo(iso) {
-  if (!iso) return '—';
+// ── Helpers ───────────────────────────────────────────────────────────────
+const fmt  = n => n == null ? '—' : Number(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const clip = (s,n) => s.length > n ? s.slice(0,n)+'…' : s;
+const ago  = iso => {
   const s = (Date.now()-new Date(iso))/1000;
-  if (s<60)    return 'just now';
-  if (s<3600)  return Math.round(s/60)+'m ago';
-  if (s<86400) return Math.round(s/3600)+'h ago';
+  if (s < 60)    return 'just now';
+  if (s < 3600)  return Math.round(s/60)+'m ago';
+  if (s < 86400) return Math.round(s/3600)+'h ago';
   return Math.round(s/86400)+'d ago';
-}
+};
 
-loadData();
-setInterval(loadData, 5*60*1000);
+// ── Init ──────────────────────────────────────────────────────────────────
+load();
+setInterval(load, 5*60*1000);
 </script>
 </body>
 </html>
