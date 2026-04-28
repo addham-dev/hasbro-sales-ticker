@@ -7,87 +7,90 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --blue: #009CDE; --blue-dark: #0077A8; --blue-light: #E5F6FF;
-      --bg: #F0F8FC; --white: #fff; --text: #003A54; --text2: #5A8DA0;
-      --text3: #A0C8D8; --border: #D0EAF5; --green: #00B388; --red: #E8423F;
-      --shadow: 0 2px 16px rgba(0,156,222,0.08); --shadow-lg: 0 8px 32px rgba(0,156,222,0.15);
+      --blue:#009CDE;--blue-dark:#0077A8;--blue-light:#E5F6FF;
+      --bg:#F0F8FC;--white:#fff;--text:#003A54;--text2:#5A8DA0;
+      --text3:#A0C8D8;--border:#D0EAF5;--green:#00B388;--red:#E8423F;
+      --shadow:0 2px 16px rgba(0,156,222,0.08);--shadow-lg:0 8px 32px rgba(0,156,222,0.15);
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:var(--bg); color:var(--text); font-family:'Nunito',sans-serif; min-height:100vh; }
-    header { background:var(--blue); padding:0 40px; display:flex; align-items:center; justify-content:space-between; height:72px; box-shadow:0 4px 20px rgba(0,156,222,0.3); }
-    .logo { display:flex; align-items:center; gap:16px; }
-    .logo-mark { width:44px; height:44px; background:white; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:var(--blue); box-shadow:0 2px 8px rgba(0,0,0,0.15); }
-    .logo-text { font-size:22px; font-weight:800; color:white; }
-    .logo-sub { font-size:11px; color:rgba(255,255,255,0.75); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:1px; }
-    .header-right { display:flex; align-items:center; gap:16px; }
-    .live-badge { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.2); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:700; color:white; letter-spacing:1px; text-transform:uppercase; }
-    .live-dot { width:8px; height:8px; background:#7DFFD0; border-radius:50%; animation:pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-    .last-updated { font-size:12px; color:rgba(255,255,255,0.75); font-weight:600; font-family:'DM Mono',monospace; }
-    .currency-toggle { display:flex; background:rgba(255,255,255,0.15); border-radius:8px; overflow:hidden; }
-    .currency-btn { padding:6px 12px; border:none; background:transparent; color:rgba(255,255,255,0.7); font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; }
-    .currency-btn.active { background:white; color:var(--blue); }
-    .controls { background:white; padding:12px 40px; display:flex; align-items:center; gap:16px; border-bottom:2px solid var(--border); box-shadow:var(--shadow); flex-wrap:wrap; }
-    .controls label { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; }
-    .view-tabs { display:flex; gap:4px; }
-    .view-tab { padding:7px 16px; border-radius:8px; border:2px solid var(--border); background:var(--blue-light); color:var(--blue-dark); font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; }
-    .view-tab.active { background:var(--blue); color:white; border-color:var(--blue); box-shadow:0 2px 8px rgba(0,156,222,0.3); }
-    .view-tab:hover:not(.active) { border-color:var(--blue); }
-    .controls-divider { width:1px; height:28px; background:var(--border); margin:0 4px; }
-    .market-tabs { display:flex; gap:4px; }
-    .market-tab { padding:7px 14px; border-radius:8px; border:2px solid var(--border); background:var(--blue-light); color:var(--blue-dark); font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; }
-    .market-tab.active { background:var(--blue); color:white; border-color:var(--blue); }
-    .refresh-btn { margin-left:auto; background:var(--blue); border:none; color:white; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; padding:8px 20px; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(0,156,222,0.3); transition:all 0.2s; }
-    .refresh-btn:hover { background:var(--blue-dark); transform:translateY(-1px); }
-    .info-bar { background:var(--blue-light); padding:8px 40px; border-bottom:1px solid var(--border); font-size:12px; color:var(--text2); font-weight:600; display:flex; align-items:center; gap:8px; }
-    .info-bar span { color:var(--blue-dark); font-weight:700; }
-    .fx-notice { margin-left:auto; font-size:11px; color:var(--text3); font-family:'DM Mono',monospace; }
-    .ticker-tape { background:var(--blue-dark); padding:9px 0; overflow:hidden; }
-    .ticker-inner { display:flex; animation:ticker 35s linear infinite; white-space:nowrap; }
-    .ticker-item { font-family:'DM Mono',monospace; font-size:12px; color:white; padding:0 28px; }
-    .ticker-sep { color:rgba(255,255,255,0.3); }
-    @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    main { padding:28px 40px; display:grid; gap:24px; max-width:1600px; margin:0 auto; }
-    .hero-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
-    .stat-card { background:white; border-radius:16px; padding:24px 28px; box-shadow:var(--shadow); border:2px solid var(--border); animation:slideUp 0.5s ease forwards; opacity:0; transition:box-shadow 0.2s,transform 0.2s; }
-    .stat-card:hover { box-shadow:var(--shadow-lg); transform:translateY(-2px); }
-    .stat-card:nth-child(1){animation-delay:0.1s} .stat-card:nth-child(2){animation-delay:0.2s} .stat-card:nth-child(3){animation-delay:0.3s} .stat-card:nth-child(4){animation-delay:0.4s}
-    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-    .stat-icon { font-size:24px; margin-bottom:10px; }
-    .stat-label { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
-    .stat-value { font-size:44px; font-weight:900; line-height:1; letter-spacing:-1px; }
-    .stat-card.revenue .stat-value{color:var(--blue)} .stat-card.units .stat-value{color:var(--green)} .stat-card.asins .stat-value{color:#F5A623} .stat-card.snapshots .stat-value{color:#9B59B6}
-    .stat-sub { font-size:11px; color:var(--text3); font-weight:600; margin-top:6px; }
-    .bottom-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-    .panel { background:white; border-radius:16px; box-shadow:var(--shadow); border:2px solid var(--border); overflow:hidden; animation:slideUp 0.5s ease forwards; opacity:0; }
-    .panel:nth-child(1){animation-delay:0.5s} .panel:nth-child(2){animation-delay:0.6s}
-    .panel-header { padding:16px 24px; border-bottom:2px solid var(--border); display:flex; align-items:center; justify-content:space-between; background:var(--blue-light); }
-    .panel-title { font-size:13px; font-weight:800; color:var(--blue-dark); text-transform:uppercase; letter-spacing:1px; }
-    .panel-badge { font-size:11px; font-weight:700; color:var(--text2); background:white; padding:3px 10px; border-radius:20px; border:1px solid var(--border); font-family:'DM Mono',monospace; }
-    .asin-list { padding:4px 0; }
-    .asin-row { display:grid; grid-template-columns:28px 1fr auto auto; gap:12px; align-items:center; padding:10px 24px; border-bottom:1px solid var(--border); transition:background 0.15s; }
-    .asin-row:last-child{border-bottom:none} .asin-row:hover{background:var(--blue-light)}
-    .asin-rank { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+    header{background:var(--blue);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px;box-shadow:0 4px 20px rgba(0,156,222,0.3);}
+    .logo{display:flex;align-items:center;gap:16px;}
+    .logo-mark{width:44px;height:44px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:var(--blue);}
+    .logo-text{font-size:22px;font-weight:800;color:white;}
+    .logo-sub{font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
+    .header-right{display:flex;align-items:center;gap:16px;}
+    .live-badge{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;color:white;letter-spacing:1px;text-transform:uppercase;}
+    .live-dot{width:8px;height:8px;background:#7DFFD0;border-radius:50%;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+    .last-updated{font-size:12px;color:rgba(255,255,255,0.75);font-weight:600;font-family:'DM Mono',monospace;}
+    .currency-toggle{display:flex;background:rgba(255,255,255,0.15);border-radius:8px;overflow:hidden;}
+    .currency-btn{padding:6px 12px;border:none;background:transparent;color:rgba(255,255,255,0.7);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+    .currency-btn.active{background:white;color:var(--blue);}
+    .controls{background:white;padding:12px 40px;display:flex;align-items:center;gap:16px;border-bottom:2px solid var(--border);box-shadow:var(--shadow);flex-wrap:wrap;}
+    .controls label{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;}
+    .view-tabs{display:flex;gap:4px;}
+    .view-tab{padding:7px 16px;border-radius:8px;border:2px solid var(--border);background:var(--blue-light);color:var(--blue-dark);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+    .view-tab.active{background:var(--blue);color:white;border-color:var(--blue);}
+    .controls-divider{width:1px;height:28px;background:var(--border);margin:0 4px;}
+    .market-tabs{display:flex;gap:4px;}
+    .market-tab{padding:7px 14px;border-radius:8px;border:2px solid var(--border);background:var(--blue-light);color:var(--blue-dark);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+    .market-tab.active{background:var(--blue);color:white;border-color:var(--blue);}
+    .refresh-btn{margin-left:auto;background:var(--blue);border:none;color:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:8px 20px;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+    .refresh-btn:hover{background:var(--blue-dark);}
+    .info-bar{background:var(--blue-light);padding:8px 40px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);font-weight:600;display:flex;align-items:center;gap:8px;}
+    .info-bar span{color:var(--blue-dark);font-weight:700;}
+    .ticker-tape{background:var(--blue-dark);padding:9px 0;overflow:hidden;}
+    .ticker-inner{display:flex;animation:ticker 35s linear infinite;white-space:nowrap;}
+    .ticker-item{font-family:'DM Mono',monospace;font-size:12px;color:white;padding:0 28px;}
+    .ticker-sep{color:rgba(255,255,255,0.3);}
+    @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    main{padding:28px 40px;display:grid;gap:24px;max-width:1600px;margin:0 auto;}
+    .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+    .stat-card{background:white;border-radius:16px;padding:24px 28px;box-shadow:var(--shadow);border:2px solid var(--border);animation:slideUp 0.5s ease forwards;opacity:0;}
+    .stat-card:nth-child(1){animation-delay:0.1s}.stat-card:nth-child(2){animation-delay:0.2s}.stat-card:nth-child(3){animation-delay:0.3s}.stat-card:nth-child(4){animation-delay:0.4s}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .stat-icon{font-size:24px;margin-bottom:10px;}
+    .stat-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+    .stat-value{font-size:44px;font-weight:900;line-height:1;letter-spacing:-1px;}
+    .stat-card.revenue .stat-value{color:var(--blue)}.stat-card.units .stat-value{color:var(--green)}.stat-card.asins .stat-value{color:#F5A623}.stat-card.snapshots .stat-value{color:#9B59B6}
+    .stat-sub{font-size:11px;color:var(--text3);font-weight:600;margin-top:6px;}
+    .bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+    .panel{background:white;border-radius:16px;box-shadow:var(--shadow);border:2px solid var(--border);overflow:hidden;animation:slideUp 0.5s ease forwards;opacity:0;}
+    .panel:nth-child(1){animation-delay:0.5s}.panel:nth-child(2){animation-delay:0.6s}
+    .panel-header{padding:16px 24px;border-bottom:2px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--blue-light);}
+    .panel-title{font-size:13px;font-weight:800;color:var(--blue-dark);text-transform:uppercase;letter-spacing:1px;}
+    .panel-badge{font-size:11px;font-weight:700;color:var(--text2);background:white;padding:3px 10px;border-radius:20px;border:1px solid var(--border);font-family:'DM Mono',monospace;}
+    .asin-list{padding:4px 0;}
+    .asin-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:10px 24px;border-bottom:1px solid var(--border);transition:background 0.15s;}
+    .asin-row:last-child{border-bottom:none}.asin-row:hover{background:var(--blue-light)}
+    .asin-rank{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);}
     .asin-rank.top3{color:var(--blue);font-weight:700}
-    .asin-info{overflow:hidden}
-    .asin-code { font-family:'DM Mono',monospace; font-size:10px; color:var(--blue); letter-spacing:0.5px; }
-    .asin-name { font-size:12px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; font-weight:600; }
-    .asin-revenue { font-family:'DM Mono',monospace; font-size:13px; color:var(--text); text-align:right; white-space:nowrap; }
-    .asin-units { font-size:11px; color:var(--text2); text-align:right; white-space:nowrap; font-weight:700; background:var(--blue-light); padding:2px 8px; border-radius:10px; }
-    .market-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px}
-    .market-GB{background:#E8F4FF;color:#0077A8} .market-DE{background:#FFF3E0;color:#E65100} .market-FR{background:#F3E5F5;color:#6A1B9A}
-    .chart-area{padding:20px 24px;display:flex;flex-direction:column;gap:12px}
-    .bar-row{display:grid;grid-template-columns:120px 1fr 70px;align-items:center;gap:12px}
-    .bar-label{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'DM Mono',monospace}
-    .bar-track{height:22px;background:var(--blue-light);border-radius:6px;overflow:hidden}
-    .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue) 0%,#5DCFFF 100%);border-radius:6px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
-    .bar-value{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue-dark);text-align:right}
-    .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:260px;gap:14px;color:var(--text3);font-size:13px;font-weight:700}
-    .loading-bar{width:160px;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
-    .loading-bar::after{content:'';display:block;height:100%;width:40%;background:var(--blue);border-radius:4px;animation:loading 1.4s ease infinite}
+    .asin-info{overflow:hidden;}
+    .asin-code{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);}
+    .asin-name{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;font-weight:600;}
+    .asin-revenue{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);text-align:right;white-space:nowrap;}
+    .asin-units{font-size:11px;color:var(--text2);text-align:right;white-space:nowrap;font-weight:700;background:var(--blue-light);padding:2px 8px;border-radius:10px;}
+    .market-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+    .market-GB{background:#E8F4FF;color:#0077A8}.market-DE{background:#FFF3E0;color:#E65100}.market-FR{background:#F3E5F5;color:#6A1B9A}.market-IT{background:#E8F5E9;color:#2E7D32}.market-ES{background:#FFF8E1;color:#F57F17}
+    .bar-bg{height:4px;background:var(--border);border-radius:2px;margin-top:4px;}
+    .bar-fg{height:100%;background:var(--blue);border-radius:2px;}
+    .chart-area{padding:20px 24px;display:flex;flex-direction:column;gap:12px;}
+    .bar-row{display:grid;grid-template-columns:120px 1fr 70px;align-items:center;gap:12px;}
+    .bar-label{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'DM Mono',monospace;}
+    .bar-track{height:22px;background:var(--blue-light);border-radius:6px;overflow:hidden;}
+    .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue) 0%,#5DCFFF 100%);border-radius:6px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
+    .bar-value{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue-dark);text-align:right;}
+    .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:260px;gap:14px;color:var(--text3);font-size:13px;font-weight:700;}
+    .loading-bar{width:160px;height:4px;background:var(--border);border-radius:4px;overflow:hidden;}
+    .loading-bar::after{content:'';display:block;height:100%;width:40%;background:var(--blue);border-radius:4px;animation:loading 1.4s ease infinite;}
     @keyframes loading{0%{transform:translateX(-150%)}100%{transform:translateX(400%)}}
-    .error-msg{text-align:center;padding:40px 24px;color:var(--red);font-size:13px;font-weight:600;line-height:1.6}
-    footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);font-weight:600;letter-spacing:1px}
+    .error-msg{text-align:center;padding:40px 24px;color:var(--red);font-size:13px;font-weight:600;line-height:1.6;}
+    .window-info{background:white;border-radius:12px;padding:12px 20px;border:2px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;}
+    .wi-item{display:flex;flex-direction:column;gap:2px;}
+    .wi-label{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;}
+    .wi-value{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);font-weight:600;}
+    footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);font-weight:600;letter-spacing:1px;}
   </style>
 </head>
 <body>
@@ -104,18 +107,20 @@
         <button class="currency-btn active" id="btn-local" onclick="setCurrency('local')">£/€</button>
         <button class="currency-btn" id="btn-usd" onclick="setCurrency('usd')">$ USD</button>
       </div>
-      <span style="font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace" id="fx-rate-display">£1=$1.270 · €1=$1.090</span>
       <div class="live-badge"><div class="live-dot"></div>Live</div>
-      <div class="last-updated" id="last-updated">Fetching data...</div>
+      <div class="last-updated" id="last-updated">Fetching...</div>
     </div>
   </header>
 
   <div class="controls">
     <label>View</label>
     <div class="view-tabs">
-      <button class="view-tab active" onclick="setView('latest',this)">Latest Snapshot</button>
-      <button class="view-tab" onclick="setView('24h',this)">Last 24 Hours</button>
-      <button class="view-tab" onclick="setView('48h',this)">Last 48 Hours</button>
+      <button class="view-tab active" onclick="setView(2,this)">Trailing 2hr</button>
+      <button class="view-tab" onclick="setView(4,this)">Trailing 4hr</button>
+      <button class="view-tab" onclick="setView(8,this)">Trailing 8hr</button>
+      <button class="view-tab" onclick="setView(12,this)">Trailing 12hr</button>
+      <button class="view-tab" onclick="setView(24,this)">Trailing 24hr</button>
+      <button class="view-tab" onclick="setView(48,this)">Trailing 48hr</button>
     </div>
     <div class="controls-divider"></div>
     <label>Market</label>
@@ -129,8 +134,7 @@
   </div>
 
   <div class="info-bar">
-    Showing <span id="info-view">latest snapshot</span> · <span id="info-market">All markets</span> · <span id="info-sessions">— snapshots</span>
-    <span class="fx-notice" id="fx-notice"></span>
+    Showing <span id="info-view">trailing 2 hours</span> · <span id="info-market">All markets</span> · <span id="info-count">— ASINs</span>
   </div>
 
   <div class="ticker-tape">
@@ -142,9 +146,9 @@
   <main>
     <div class="hero-stats">
       <div class="stat-card revenue"><div class="stat-icon">💰</div><div class="stat-label">Total Revenue</div><div class="stat-value" id="total-revenue">—</div><div class="stat-sub" id="revenue-sub">Awaiting data</div></div>
-      <div class="stat-card units"><div class="stat-icon">📦</div><div class="stat-label">Total Units</div><div class="stat-value" id="total-units">—</div><div class="stat-sub" id="units-sub">Awaiting data</div></div>
-      <div class="stat-card asins"><div class="stat-icon">🏷️</div><div class="stat-label">Active ASINs</div><div class="stat-value" id="total-asins">—</div><div class="stat-sub" id="asins-sub">Awaiting data</div></div>
-      <div class="stat-card snapshots"><div class="stat-icon">📸</div><div class="stat-label">Snapshots</div><div class="stat-value" id="total-snapshots">—</div><div class="stat-sub" id="snapshots-sub">In current window</div></div>
+      <div class="stat-card units"><div class="stat-icon">📦</div><div class="stat-label">Total Units</div><div class="stat-value" id="total-units">—</div><div class="stat-sub">Ordered units</div></div>
+      <div class="stat-card asins"><div class="stat-icon">🏷️</div><div class="stat-label">Active ASINs</div><div class="stat-value" id="total-asins">—</div><div class="stat-sub">With revenue > 0</div></div>
+      <div class="stat-card snapshots"><div class="stat-icon">🕐</div><div class="stat-label">Last Captured</div><div class="stat-value" id="last-capture" style="font-size:24px;">—</div><div class="stat-sub" id="capture-sub">—</div></div>
     </div>
     <div class="bottom-grid">
       <div class="panel">
@@ -162,31 +166,39 @@
   <script>
     const SUPABASE_URL='https://rycqfwzgvpzwhphgclpb.supabase.co';
     const SUPABASE_KEY='sb_publishable_CbKFhpN2dWI_UXhwGkclqw_AMPSprs4';
-    let currentView='latest',currentMarket='all',currentCurrency='local';
-    let cachedRawAsins=null,cachedMeta=null;
-    const fxRates={GBP_USD:1.27,EUR_USD:1.09};
+    const FX={GBP_USD:1.27,EUR_USD:1.09};
+    let currentHours=2, currentMarket='all', currentCurrency='local';
+    let allRows=[];
 
-    function convertRevenue(value,market){if(currentCurrency==='local')return value;return value*((market==='GB')?fxRates.GBP_USD:fxRates.EUR_USD);}
-    function formatCurrency(val,market){if(currentCurrency==='usd'){return(val>=1000)?'$'+(val/1000).toFixed(1)+'K':'$'+val.toFixed(2);}const sym=(market==='GB')?'£':'€';return(val>=1000)?sym+(val/1000).toFixed(1)+'K':sym+val.toFixed(2);}
-    function formatCurrencyTotal(val){const sym=currentCurrency==='usd'?'$':'£';return(val>=1000)?sym+(val/1000).toFixed(1)+'K':sym+val.toFixed(2);}
+    function convertRevenue(val,market){
+      if(currentCurrency==='local') return val;
+      return val*(market==='GB'?FX.GBP_USD:FX.EUR_USD);
+    }
+    function formatCurrency(val,market){
+      const v=convertRevenue(val,market);
+      const sym=currentCurrency==='usd'?'$':market==='GB'?'£':'€';
+      return v>=1000?sym+(v/1000).toFixed(1)+'K':sym+v.toFixed(2);
+    }
+    function formatTotal(val){
+      const sym=currentCurrency==='usd'?'$':'£/€';
+      return val>=1000000?sym+(val/1000000).toFixed(1)+'M':val>=1000?sym+(val/1000).toFixed(1)+'K':sym+val.toFixed(0);
+    }
     function formatTime(iso){return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
-    function formatDate(iso){return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
+    function formatDateTime(iso){return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
 
     function setCurrency(mode){
       currentCurrency=mode;
       document.getElementById('btn-local').classList.toggle('active',mode==='local');
       document.getElementById('btn-usd').classList.toggle('active',mode==='usd');
-      document.getElementById('fx-notice').textContent=mode==='usd'?`Fixed FX · £→$${fxRates.GBP_USD.toFixed(3)} · €→$${fxRates.EUR_USD.toFixed(3)}`:'';
-      if(cachedRawAsins)renderAll(cachedRawAsins,cachedMeta);
+      renderDashboard();
     }
 
-    function setView(view,btn){
-      currentView=view;
+    function setView(hours,btn){
+      currentHours=hours;
       document.querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      const labels={latest:'latest snapshot','24h':'last 24 hours','48h':'last 48 hours'};
-      document.getElementById('info-view').textContent=labels[view];
-      loadData();
+      document.getElementById('info-view').textContent=`trailing ${hours} hours`;
+      renderDashboard();
     }
 
     function setMarket(market,btn){
@@ -195,97 +207,97 @@
       btn.classList.add('active');
       const labels={all:'All markets',GB:'🇬🇧 GB only',DE:'🇩🇪 DE only',FR:'🇫🇷 FR only'};
       document.getElementById('info-market').textContent=labels[market];
-      loadData();
-    }
-
-    async function fetchData(){
-      let url=`${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&order=captured_at.desc&limit=10000`;
-      if(currentMarket!=='all')url+=`&market=eq.${currentMarket}`;
-      const res=await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
-      if(!res.ok)throw new Error('Failed to fetch from Supabase: '+res.status);
-      return res.json();
-    }
-
-    function processData(rows){
-      if(!rows||rows.length===0)return null;
-      let filteredRows=rows;
-      let windowHours=48;
-      if(currentView==='24h')windowHours=24;
-      if(currentView==='latest'){
-        const latestSessions={};
-        rows.forEach(row=>{if(!latestSessions[row.market])latestSessions[row.market]=row.session_id;});
-        filteredRows=rows.filter(row=>latestSessions[row.market]===row.session_id);
-      } else {
-        const cutoff=new Date();
-        cutoff.setHours(cutoff.getHours()-windowHours);
-        filteredRows=rows.filter(row=>new Date(row.captured_at)>=cutoff);
-        const latestPerAsin={};
-        filteredRows.forEach(row=>{
-          const key=`${row.asin}_${row.market}`;
-          if(!latestPerAsin[key]||new Date(row.captured_at)>new Date(latestPerAsin[key].captured_at))latestPerAsin[key]=row;
-        });
-        filteredRows=Object.values(latestPerAsin);
-      }
-      const uniqueSessions=new Set(rows.map(r=>r.session_id)).size;
-      const asinMap={};
-      filteredRows.forEach(row=>{
-        const key=`${row.asin}_${row.market}`;
-        asinMap[key]={asin:row.asin,product_title:row.product_title,market:row.market,ordered_revenue_local:row.ordered_revenue,ordered_units:row.ordered_units};
-      });
-      cachedRawAsins=Object.values(asinMap);
-      cachedMeta={latestTime:rows[0].captured_at,uniqueSessions};
-      return renderAll(cachedRawAsins,cachedMeta);
-    }
-
-    function renderAll(rawAsins,meta){
-      const asins=rawAsins.map(a=>({...a,ordered_revenue:convertRevenue(a.ordered_revenue_local,a.market)})).filter(a=>a.ordered_revenue>0).sort((a,b)=>b.ordered_revenue-a.ordered_revenue);
-      const totalRevenue=asins.reduce((s,a)=>s+a.ordered_revenue,0);
-      const totalUnits=asins.reduce((s,a)=>s+a.ordered_units,0);
-      document.getElementById('total-revenue').textContent=formatCurrencyTotal(totalRevenue);
-      document.getElementById('total-units').textContent=totalUnits.toLocaleString();
-      document.getElementById('total-asins').textContent=asins.length;
-      document.getElementById('total-snapshots').textContent=meta.uniqueSessions;
-      document.getElementById('revenue-sub').textContent=currentCurrency==='usd'?'Converted to USD':(currentMarket==='all'?'GB + DE + FR':`${currentMarket} only`);
-      document.getElementById('units-sub').textContent='Ordered units';
-      document.getElementById('asins-sub').textContent='With revenue > 0';
-      document.getElementById('snapshots-sub').textContent=currentView==='latest'?'Current session':`In ${currentView} window`;
-      document.getElementById('last-updated').textContent='Updated '+formatTime(meta.latestTime);
-      document.getElementById('snapshot-time').textContent=formatDate(meta.latestTime);
-      document.getElementById('info-sessions').textContent=`${meta.uniqueSessions} snapshot${meta.uniqueSessions!==1?'s':''}`;
-      const html=asins.slice(0,10).map((a,i)=>`
-        <div class="asin-row">
-          <div class="asin-rank ${i<3?'top3':''}">${String(i+1).padStart(2,'0')}</div>
-          <div class="asin-info"><div class="asin-code">${a.asin} <span class="market-badge market-${a.market}">${a.market}</span></div><div class="asin-name">${a.product_title||'—'}</div></div>
-          <div class="asin-revenue">${formatCurrency(a.ordered_revenue,a.market)}</div>
-          <div class="asin-units">${a.ordered_units} u</div>
-        </div>`).join('');
-      document.getElementById('asin-list-container').innerHTML=`<div class="asin-list">${html}</div>`;
-      const top8=asins.slice(0,8);
-      if(top8.length>0){
-        const max=top8[0].ordered_revenue;
-        document.getElementById('chart-area').innerHTML=top8.map(a=>`
-          <div class="bar-row">
-            <div class="bar-label">${a.product_title?a.product_title.substring(0,22)+'...':a.asin}</div>
-            <div class="bar-track"><div class="bar-fill" data-width="${(a.ordered_revenue/max*100).toFixed(1)}"></div></div>
-            <div class="bar-value">${formatCurrency(a.ordered_revenue,a.market)}</div>
-          </div>`).join('');
-        setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.width+'%');},100);
-      }
-      const items=asins.slice(0,20).map(a=>`<span class="ticker-item">${a.asin} <span class="ticker-sep">·</span> ${a.product_title?a.product_title.substring(0,30):''} <span class="ticker-sep">·</span> ${formatCurrency(a.ordered_revenue,a.market)} <span class="ticker-sep">·</span> ${a.ordered_units} units</span>`).join('');
-      document.getElementById('ticker-inner').innerHTML=items+items;
-      return true;
+      renderDashboard();
     }
 
     async function loadData(){
-      try{
-        const rows=await fetchData();
-        const result=processData(rows);
-        if(!result){document.getElementById('asin-list-container').innerHTML='<div class="error-msg">No data found yet.<br>Open Vendor Central Real-time Sales and let the extension capture data.</div>';}
-      }catch(e){document.getElementById('asin-list-container').innerHTML=`<div class="error-msg">Error: ${e.message}</div>`;}
+      try {
+        // Fetch all rows — we filter by lookback_hours client side
+        let url=`${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&order=captured_at.desc&limit=20000`;
+        if(currentMarket!=='all') url+=`&market=eq.${currentMarket}`;
+        const res=await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
+        allRows=await res.json();
+        renderDashboard();
+      } catch(e) {
+        document.getElementById('asin-list-container').innerHTML=`<div class="error-msg">Error: ${e.message}</div>`;
+      }
+    }
+
+    function renderDashboard(){
+      // Filter by lookback_hours and market
+      let rows=allRows.filter(r=>r.lookback_hours===currentHours);
+      if(currentMarket!=='all') rows=rows.filter(r=>r.market===currentMarket);
+
+      // Get latest session per market
+      const latestSession={};
+      rows.forEach(r=>{
+        if(!latestSession[r.market]||new Date(r.captured_at)>new Date(latestSession[r.market].captured_at)){
+          latestSession[r.market]=r;
+        }
+      });
+
+      // Filter to only latest session rows per market
+      const latestSessionIds=new Set(Object.values(latestSession).map(r=>r.session_id));
+      const filtered=rows.filter(r=>latestSessionIds.has(r.session_id)).filter(r=>r.ordered_revenue>0);
+
+      if(filtered.length===0){
+        document.getElementById('asin-list-container').innerHTML=`<div class="error-msg">No data for trailing ${currentHours} hours.<br>Open Vendor Central Real-time Sales to capture data.</div>`;
+        document.getElementById('total-revenue').textContent='—';
+        document.getElementById('total-units').textContent='—';
+        document.getElementById('total-asins').textContent='—';
+        return;
+      }
+
+      // Sort by revenue
+      filtered.sort((a,b)=>b.ordered_revenue-a.ordered_revenue);
+
+      // KPIs
+      const totalRev=filtered.reduce((s,r)=>s+convertRevenue(r.ordered_revenue,r.market),0);
+      const totalUnits=filtered.reduce((s,r)=>s+r.ordered_units,0);
+      const latestTime=filtered[0].captured_at;
+
+      document.getElementById('total-revenue').textContent=formatTotal(totalRev);
+      document.getElementById('total-units').textContent=totalUnits.toLocaleString();
+      document.getElementById('total-asins').textContent=filtered.length;
+      document.getElementById('last-capture').textContent=formatTime(latestTime);
+      document.getElementById('capture-sub').textContent=formatDateTime(latestTime);
+      document.getElementById('last-updated').textContent='Updated '+formatTime(latestTime);
+      document.getElementById('snapshot-time').textContent=formatDateTime(latestTime);
+      document.getElementById('info-count').textContent=filtered.length+' ASINs';
+
+      // ASIN list
+      const top10=filtered.slice(0,10);
+      document.getElementById('asin-list-container').innerHTML=`<div class="asin-list">${
+        top10.map((r,i)=>`
+          <div class="asin-row">
+            <div class="asin-rank ${i<3?'top3':''}">${String(i+1).padStart(2,'0')}</div>
+            <div class="asin-info">
+              <div class="asin-code">${r.asin}<span class="market-badge market-${r.market}">${r.market}</span></div>
+              <div class="asin-name">${r.product_title||'—'}</div>
+            </div>
+            <div class="asin-revenue">${formatCurrency(r.ordered_revenue,r.market)}</div>
+            <div class="asin-units">${r.ordered_units}u</div>
+          </div>`).join('')
+      }</div>`;
+
+      // Chart
+      const top8=filtered.slice(0,8);
+      const maxR=top8[0].ordered_revenue;
+      document.getElementById('chart-area').innerHTML=top8.map(r=>`
+        <div class="bar-row">
+          <div class="bar-label">${(r.product_title||r.asin).substring(0,22)+'...'}</div>
+          <div class="bar-track"><div class="bar-fill" data-width="${(r.ordered_revenue/maxR*100).toFixed(1)}"></div></div>
+          <div class="bar-value">${formatCurrency(r.ordered_revenue,r.market)}</div>
+        </div>`).join('');
+      setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.width+'%');},100);
+
+      // Ticker
+      const items=filtered.slice(0,20).map(r=>`<span class="ticker-item">${r.asin} <span class="ticker-sep">·</span> ${(r.product_title||'').substring(0,30)} <span class="ticker-sep">·</span> ${formatCurrency(r.ordered_revenue,r.market)} <span class="ticker-sep">·</span> ${r.ordered_units} units</span>`).join('');
+      document.getElementById('ticker-inner').innerHTML=items+items;
     }
 
     loadData();
-    setInterval(loadData,5*60*1000);
+    setInterval(loadData, 5*60*1000);
   </script>
 </body>
 </html>
