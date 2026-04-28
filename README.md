@@ -1,1 +1,1 @@
- # hasbro-sales-ticker
+  # hasbro-sales-ticker
