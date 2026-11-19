@@ -6,9 +6,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Hasbro EU Sales Ticker v4.4</title>
+  <title>Hasbro EU Sales Ticker v4.5</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>if(window.location.search.indexOf('v=4.4')===-1){window.location.replace(window.location.pathname+'?v=4.4');}</script>
+  <script>if(window.location.search.indexOf('v=4.5')===-1){window.location.replace(window.location.pathname+'?v=4.5');}</script>
   <style>
     :root {
       --blue:#009CDE;--blue-dark:#0077A8;--blue-light:#E5F6FF;
@@ -302,7 +302,12 @@ async function loadData(){
 function selectedMarkets(){ return market==='all' ? MARKETS : [market]; }
 
 function render(){
-  const mkts = selectedMarkets();
+  // Markets whose latest capture is over STALE_HOURS old are left out of the
+  // totals and flagged, so old data is never passed off as live.
+  const STALE_HOURS = 24;
+  const isStale = m => !data[m]?.capturedAt || (Date.now() - ts(data[m].capturedAt)) > STALE_HOURS*3600000;
+  const staleMkts = selectedMarkets().filter(m => data[m]?.capturedAt && isStale(m));
+  const mkts = selectedMarkets().filter(m => !isStale(m));
   const rows = mkts.flatMap(m => (data[m]?.latest||[]).filter(r=>r.ordered_revenue>0));
   const prevRows = mkts.flatMap(m => (data[m]?.prev||[]).filter(r=>r.ordered_revenue>0));
 
@@ -310,8 +315,11 @@ function render(){
   document.getElementById('info-markets').textContent = MARKETS.map(m=>{
     const d=data[m]; if(!d) return `${m}: …`;
     if(d.error) return `${m}: error`;
-    return d.capturedAt ? `${m}: ${fmtDate(d.capturedAt)}` : `${m}: no data`;
+    if (!d.capturedAt) return `${m}: no data`;
+    return isStale(m) ? `⚠️ ${m}: last captured ${fmtDate(d.capturedAt)} — STALE, excluded` : `${m}: ${fmtDate(d.capturedAt)}`;
   }).join('  ·  ');
+  if (staleMkts.length) document.getElementById('info-markets').style.color = 'var(--red)';
+  else document.getElementById('info-markets').style.color = '';
 
   const errs = mkts.filter(m=>data[m]?.error).map(m=>`${m}: ${data[m].error}`);
 
