@@ -6,9 +6,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Hasbro EU Sales Ticker v4.1</title>
+  <title>Hasbro EU Sales Ticker v4.4</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>if(window.location.search.indexOf('v=4.1')===-1){window.location.replace(window.location.pathname+'?v=4.1');}</script>
+  <script>if(window.location.search.indexOf('v=4.4')===-1){window.location.replace(window.location.pathname+'?v=4.4');}</script>
   <style>
     :root {
       --blue:#009CDE;--blue-dark:#0077A8;--blue-light:#E5F6FF;
@@ -256,18 +256,29 @@ async function loadMarket(mkt, lb){
   const base = `market=eq.${mkt}&lookback_hours=eq.${lb}`;
   const latest = await sb(`?select=session_id,captured_at&${base}&order=captured_at.desc&limit=1`);
   if(!latest.length) return {latest:[],prev:[],capturedAt:null};
-  const sid = latest[0].session_id;
-  const sidF = `session_id=eq.${encodeURIComponent(sid)}`;
+  // session_id is per market/lookback/DAY (e.g. GB_48h_20261119), so several
+  // captures on the same day share it. Each capture's rows share one exact
+  // captured_at, so match on that instead to get only the latest capture.
+  // A capture can span several minutes (older extension versions stamped each
+  // page separately), and two tabs/frames can save the same capture twice.
+  // So: take every row saved in the WINDOW minutes up to the latest timestamp,
+  // then keep one row per ASIN (the newest). No double counting, no lost pages.
+  const at = latest[0].captured_at;
   const [latestRows, prevHead] = await Promise.all([
-    sbAll(`${base}&${sidF}`),
-    sb(`?select=session_id&${base}&session_id=neq.${encodeURIComponent(sid)}&order=captured_at.desc&limit=1`)
+    captureRows(base, at),
+    sb(`?select=captured_at&${base}&captured_at=lt.${encodeURIComponent(windowStart(at))}&order=captured_at.desc&limit=1`)
   ]);
-  let prevRows=[];
-  if(prevHead.length){
-    prevRows = await sbAll(`${base}&session_id=eq.${encodeURIComponent(prevHead[0].session_id)}`);
-  }
-  const capturedAt = latestRows.reduce((b,r)=>ts(r.captured_at)>ts(b)?r.captured_at:b, latest[0].captured_at);
-  return {latest:latestRows, prev:prevRows, capturedAt};
+  const prevRows = prevHead.length ? await captureRows(base, prevHead[0].captured_at) : [];
+  return {latest:latestRows, prev:prevRows, capturedAt:at};
+}
+
+const WINDOW_MIN = 5;
+function windowStart(at){ return new Date(ts(at) - WINDOW_MIN*60000).toISOString(); }
+async function captureRows(base, at){
+  const rows = await sbAll(`${base}&captured_at=gte.${encodeURIComponent(windowStart(at))}&captured_at=lte.${encodeURIComponent(at)}`);
+  const byAsin = {};
+  rows.forEach(r=>{ const k=r.asin; if(!byAsin[k] || ts(r.captured_at)>ts(byAsin[k].captured_at)) byAsin[k]=r; });
+  return Object.values(byAsin);
 }
 
 async function loadData(){
