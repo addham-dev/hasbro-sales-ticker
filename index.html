@@ -6,9 +6,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Hasbro EU Sales Ticker v4</title>
+  <title>Hasbro EU Sales Ticker v4.1</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>if(window.location.search.indexOf('v=')===-1){window.location.replace(window.location.pathname+'?v=4.0');}</script>
+  <script>if(window.location.search.indexOf('v=4.1')===-1){window.location.replace(window.location.pathname+'?v=4.1');}</script>
   <style>
     :root {
       --blue:#009CDE;--blue-dark:#0077A8;--blue-light:#E5F6FF;
@@ -45,7 +45,8 @@
     .view-tab.active,.market-tab.active{background:var(--blue);color:white;border-color:var(--blue);}
     .divider{width:1px;height:28px;background:var(--border);}
     .refresh-btn{margin-left:auto;background:var(--blue);border:none;color:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:8px 20px;border-radius:8px;cursor:pointer;}
-    .info-bar{background:var(--blue-light);padding:8px 40px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);font-weight:600;display:flex;gap:8px;align-items:center;}
+    .refresh-btn:disabled{opacity:0.6;cursor:wait;}
+    .info-bar{background:var(--blue-light);padding:8px 40px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
     .info-bar span{color:var(--blue-dark);font-weight:700;}
     .ticker-tape{background:#1F1646;padding:9px 0;overflow:hidden;}
     .ticker-inner{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
@@ -108,7 +109,7 @@
     <a class="nav-link" href="https://addham-dev.github.io/hasbro-brand-health/">Dashboard</a>
     <a class="nav-link" href="https://addham-dev.github.io/hasbro-brand-health/insights.html">Insights</a>
     <a class="nav-link" href="https://addham-dev.github.io/hasbro-brand-health/upload.html">Upload</a>
-    <a class="nav-link active" href="#">Live Sales</a>
+    <a class="nav-link active" href="https://addham-dev.github.io/hasbro-sales-ticker/">Live Sales</a>
   </div>
   <div class="header-right">
     <div class="currency-toggle">
@@ -140,11 +141,11 @@
     <button class="market-tab" onclick="setMarket('DE',this)">🇩🇪 DE</button>
     <button class="market-tab" onclick="setMarket('FR',this)">🇫🇷 FR</button>
   </div>
-  <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻ Refresh</button>
 </div>
 
 <div class="info-bar">
-  <span id="info-view">Trailing 2 hours</span> · <span id="info-market">All markets</span> · <span id="info-count">—</span>
+  <span id="info-view">Trailing 2 hours</span> · <span id="info-market">All markets</span> · <span id="info-count">—</span> · <span id="info-markets" style="font-weight:600;color:var(--text2);">—</span>
 </div>
 
 <div class="ticker-tape">
@@ -182,6 +183,9 @@
 <script>
 const SUPABASE_URL = 'https://rycqfwzgvpzwhphgclpb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_CbKFhpN2dWI_UXhwGkclqw_AMPSprs4';
+const TABLE = 'sales_snapshots';
+const MARKETS = ['GB','DE','FR'];
+const PAGE = 1000; // Supabase returns at most 1000 rows per request
 const FX = { EUR_TO_GBP:0.86, EUR_TO_USD:1.09, GBP_TO_USD:1.27, GBP_TO_EUR:1.16 };
 const BRANDS = [
   { id:'DISNEY_KIDS', label:'Disney Kids', color:'#1565C0', titleKeys:['disney','princess','frozen','encanto','lightyear','buzz lightyear','friends','saf','imf','marvel rising'], brandKeys:['disney','hasbro disney','disney princess','hasbro frozen'] },
@@ -206,7 +210,10 @@ function classifyBrand(title) {
   return 'OTHER';
 }
 
-let lookback=2, market='all', currency='local', allRows=[];
+let lookback=2, market='all', currency='local';
+// data[market] = { latest:[rows], prev:[rows], capturedAt:'iso' }
+let data = {};
+let loadSeq = 0;
 
 function toSelected(val,mkt){if(currency==='local')return val;if(currency==='gbp')return mkt==='GB'?val:val*FX.EUR_TO_GBP;if(currency==='eur')return mkt==='GB'?val*FX.GBP_TO_EUR:val;if(currency==='usd')return mkt==='GB'?val*FX.GBP_TO_USD:val*FX.EUR_TO_USD;return val;}
 function sym(mkt){if(currency==='gbp')return'£';if(currency==='eur')return'€';if(currency==='usd')return'$';return mkt==='GB'?'£':'€';}
@@ -214,31 +221,102 @@ function fmt(val,mkt){const v=toSelected(val,mkt);const s=sym(mkt);return v>=100
 function fmtTotal(val){const s=currency==='local'?'£/€':currency==='gbp'?'£':currency==='eur'?'€':'$';if(val>=1000000)return s+(val/1000000).toFixed(2)+'M';if(val>=1000)return s+(val/1000).toFixed(1)+'K';return s+val.toFixed(0);}
 function fmtTime(iso){return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
 function fmtDate(iso){return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
+function ts(iso){const t=Date.parse(iso);return isNaN(t)?0:t;} // compare real times, not strings
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
 function setCurrency(c){currency=c;['local','gbp','eur','usd'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===c));render();}
-function setLookback(h,btn){lookback=h;document.querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('info-view').textContent='Trailing '+h+' hours';render();}
+function setLookback(h,btn){lookback=h;document.querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('info-view').textContent='Trailing '+h+' hours';loadData();}
 function setMarket(m,btn){market=m;document.querySelectorAll('.market-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const labels={all:'All markets',GB:'🇬🇧 GB only',DE:'🇩🇪 DE only',FR:'🇫🇷 FR only'};document.getElementById('info-market').textContent=labels[m];render();}
 
-async function loadData(){
-  try{
-    const url=`${SUPABASE_URL}/rest/v1/sales_snapshots?select=*&order=captured_at.desc&limit=20000`;
-    const res=await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
-    allRows=await res.json();render();
-  }catch(e){document.getElementById('asin-container').innerHTML=`<div class="empty">Error: ${e.message}</div>`;}
+// --- Supabase helpers -------------------------------------------------------
+async function sb(query){
+  const sep = query.includes('?') ? '&' : '?';
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}${query}${sep}_=${Date.now()}`,{
+    cache:'no-store',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+  });
+  if(!res.ok){throw new Error(`Supabase ${res.status}: ${(await res.text()).slice(0,200)}`);}
+  return res.json();
+}
+// Fetch every row matching a filter, 1000 at a time
+async function sbAll(filter){
+  let out=[], offset=0;
+  while(true){
+    const page = await sb(`?select=*&${filter}&order=ordered_revenue.desc&limit=${PAGE}&offset=${offset}`);
+    out = out.concat(page);
+    if(page.length < PAGE) break;
+    offset += PAGE;
+  }
+  return out;
 }
 
-function getSessionRows(tl,tm){const mkts=tm==='all'?['GB','DE','FR']:[tm];const valid=new Set();mkts.forEach(mkt=>{const cands=allRows.filter(r=>r.market===mkt&&r.lookback_hours===tl);if(!cands.length)return;const latest=cands.reduce((b,r)=>r.captured_at>b?r.captured_at:b,'');const lr=cands.find(r=>r.captured_at===latest);if(lr)valid.add(lr.session_id);});return allRows.filter(r=>valid.has(r.session_id)&&r.ordered_revenue>0);}
-function getPrevSessionRows(tl,tm){const mkts=tm==='all'?['GB','DE','FR']:[tm];const valid=new Set();mkts.forEach(mkt=>{const cands=allRows.filter(r=>r.market===mkt&&r.lookback_hours===tl);if(!cands.length)return;const sm={};cands.forEach(r=>{if(!sm[r.session_id]||r.captured_at>sm[r.session_id])sm[r.session_id]=r.captured_at;});const sessions=Object.entries(sm).sort((a,b)=>b[1].localeCompare(a[1]));if(sessions.length>=2)valid.add(sessions[1][0]);});return allRows.filter(r=>valid.has(r.session_id)&&r.ordered_revenue>0);}
+// For one market + lookback: find the latest and previous capture sessions,
+// then pull only those rows. Each market is queried separately so a busy
+// market (e.g. GB) can never push DE/FR out of the result.
+async function loadMarket(mkt, lb){
+  const base = `market=eq.${mkt}&lookback_hours=eq.${lb}`;
+  const latest = await sb(`?select=session_id,captured_at&${base}&order=captured_at.desc&limit=1`);
+  if(!latest.length) return {latest:[],prev:[],capturedAt:null};
+  const sid = latest[0].session_id;
+  const sidF = `session_id=eq.${encodeURIComponent(sid)}`;
+  const [latestRows, prevHead] = await Promise.all([
+    sbAll(`${base}&${sidF}`),
+    sb(`?select=session_id&${base}&session_id=neq.${encodeURIComponent(sid)}&order=captured_at.desc&limit=1`)
+  ]);
+  let prevRows=[];
+  if(prevHead.length){
+    prevRows = await sbAll(`${base}&session_id=eq.${encodeURIComponent(prevHead[0].session_id)}`);
+  }
+  const capturedAt = latestRows.reduce((b,r)=>ts(r.captured_at)>ts(b)?r.captured_at:b, latest[0].captured_at);
+  return {latest:latestRows, prev:prevRows, capturedAt};
+}
+
+async function loadData(){
+  const seq = ++loadSeq;
+  const lb = lookback;
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true; btn.textContent = '↻ Loading…';
+  try{
+    const results = await Promise.all(MARKETS.map(m=>loadMarket(m, lb).catch(e=>({error:e.message,latest:[],prev:[],capturedAt:null}))));
+    if(seq !== loadSeq) return; // a newer load started (e.g. lookback changed)
+    data = {};
+    MARKETS.forEach((m,i)=>data[m]=results[i]);
+    render();
+  }catch(e){
+    document.getElementById('asin-container').innerHTML=`<div class="empty">Error: ${esc(e.message)}</div>`;
+  }finally{
+    if(seq === loadSeq){ btn.disabled = false; btn.textContent = '↻ Refresh'; }
+  }
+}
+
+function selectedMarkets(){ return market==='all' ? MARKETS : [market]; }
 
 function render(){
-  const rows=getSessionRows(lookback,market);
-  if(!rows.length){document.getElementById('asin-container').innerHTML=`<div class="empty">No data for trailing ${lookback}h.<br>Open Vendor Central, set lookback to ${lookback}hr<br>and let the extension capture.</div>`;['stat-revenue','stat-units','stat-asins','stat-captured'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('chart-area').innerHTML='';document.getElementById('info-count').textContent='No data';return;}
-  const prevRows=getPrevSessionRows(lookback,market);
+  const mkts = selectedMarkets();
+  const rows = mkts.flatMap(m => (data[m]?.latest||[]).filter(r=>r.ordered_revenue>0));
+  const prevRows = mkts.flatMap(m => (data[m]?.prev||[]).filter(r=>r.ordered_revenue>0));
+
+  // Per-market freshness line, so it's obvious if one market is stale
+  document.getElementById('info-markets').textContent = MARKETS.map(m=>{
+    const d=data[m]; if(!d) return `${m}: …`;
+    if(d.error) return `${m}: error`;
+    return d.capturedAt ? `${m}: ${fmtDate(d.capturedAt)}` : `${m}: no data`;
+  }).join('  ·  ');
+
+  const errs = mkts.filter(m=>data[m]?.error).map(m=>`${m}: ${data[m].error}`);
+
+  if(!rows.length){
+    document.getElementById('asin-container').innerHTML=`<div class="empty">${errs.length?'Error loading '+esc(errs.join(' | '))+'<br>':''}No data for trailing ${lookback}h.<br>Open Vendor Central, set lookback to ${lookback}hr<br>and let the extension capture.</div>`;
+    ['stat-revenue','stat-units','stat-asins','stat-captured'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('chart-area').innerHTML='';
+    document.getElementById('info-count').textContent='No data';
+    return;
+  }
   const prevASINs=new Set(prevRows.map(r=>r.asin+'_'+r.market));
   rows.sort((a,b)=>b.ordered_revenue-a.ordered_revenue);
   const totalRev=rows.reduce((s,r)=>s+toSelected(r.ordered_revenue,r.market),0);
-  const totalUnits=rows.reduce((s,r)=>s+r.ordered_units,0);
-  const latestTime=rows.reduce((best,r)=>r.captured_at>best?r.captured_at:best,'');
+  const totalUnits=rows.reduce((s,r)=>s+(r.ordered_units||0),0);
+  const latestTime=rows.reduce((best,r)=>ts(r.captured_at)>ts(best)?r.captured_at:best,rows[0].captured_at);
   document.getElementById('stat-revenue').textContent=fmtTotal(totalRev);
   document.getElementById('stat-revenue-sub').textContent=market==='all'?'GB + DE + FR':market+' only';
   document.getElementById('stat-units').textContent=totalUnits.toLocaleString();
@@ -249,14 +327,14 @@ function render(){
   document.getElementById('panel-time').textContent=fmtDate(latestTime);
   document.getElementById('info-count').textContent=rows.length+' ASINs';
   const top20=rows.slice(0,20);
-  document.getElementById('asin-container').innerHTML=`<div class="asin-list">${top20.map((r,i)=>{const key=r.asin+'_'+r.market;const isNew=prevRows.length>0&&!prevASINs.has(key);const fire=isNew?' 🔥':'';return`<div class="asin-row"><div class="asin-rank ${i<3?'top3':''}">${String(i+1).padStart(2,'0')}</div><div class="asin-info"><div class="asin-code">${r.asin}<span class="mp mp-${r.market}">${r.market}</span>${fire}</div><div class="asin-name">${r.product_title||'—'}</div></div><div class="asin-revenue">${fmt(r.ordered_revenue,r.market)}</div><div class="asin-units">${r.ordered_units}u</div></div>`;}).join('')}</div>`;
+  document.getElementById('asin-container').innerHTML=`<div class="asin-list">${top20.map((r,i)=>{const key=r.asin+'_'+r.market;const isNew=prevRows.length>0&&!prevASINs.has(key);const fire=isNew?' 🔥':'';return`<div class="asin-row"><div class="asin-rank ${i<3?'top3':''}">${String(i+1).padStart(2,'0')}</div><div class="asin-info"><div class="asin-code">${esc(r.asin)}<span class="mp mp-${esc(r.market)}">${esc(r.market)}</span>${fire}</div><div class="asin-name">${esc(r.product_title||'—')}</div></div><div class="asin-revenue">${fmt(r.ordered_revenue,r.market)}</div><div class="asin-units">${r.ordered_units}u</div></div>`;}).join('')}</div>`;
   const brandTotals={};rows.forEach(r=>{const id=classifyBrand(r.product_title);if(!brandTotals[id])brandTotals[id]=0;brandTotals[id]+=toSelected(r.ordered_revenue,r.market);});
   const brandData=Object.entries(brandTotals).map(([id,rev])=>({id,rev,brand:BRANDS.find(b=>b.id===id)||{label:id,color:'#A0C8D8'}})).filter(b=>b.rev>0).sort((a,b)=>b.rev-a.rev);
   const maxBrand=brandData[0]?.rev||1;
   document.getElementById('brand-badge').textContent=brandData.length+' brands';
   document.getElementById('chart-area').innerHTML=brandData.map(b=>`<div class="bar-row"><div class="bar-label">${b.brand.label}</div><div class="bar-track"><div class="bar-fill" data-w="${(b.rev/maxBrand*100).toFixed(1)}" style="background:${b.brand.color};"></div></div><div class="bar-value">${fmtTotal(b.rev)}</div></div>`).join('');
   setTimeout(()=>document.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.w+'%'),100);
-  const items=rows.slice(0,20).map(r=>`<span class="ticker-item">${r.asin} <span class="ticker-sep">·</span> ${(r.product_title||'').substring(0,25)} <span class="ticker-sep">·</span> ${fmt(r.ordered_revenue,r.market)} <span class="ticker-sep">·</span> ${r.ordered_units}u</span>`).join('');
+  const items=rows.slice(0,20).map(r=>`<span class="ticker-item">${esc(r.asin)} <span class="ticker-sep">·</span> ${esc((r.product_title||'').substring(0,25))} <span class="ticker-sep">·</span> ${fmt(r.ordered_revenue,r.market)} <span class="ticker-sep">·</span> ${r.ordered_units}u</span>`).join('');
   document.getElementById('ticker-inner').innerHTML=items+items;
 }
 
