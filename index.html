@@ -6,9 +6,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Hasbro EU Sales Ticker v4.5</title>
+  <title>Hasbro EU Sales Ticker v4.6</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>if(window.location.search.indexOf('v=4.5')===-1){window.location.replace(window.location.pathname+'?v=4.5');}</script>
+  <script>if(window.location.search.indexOf('v=4.6')===-1){window.location.replace(window.location.pathname+'?v=4.6');}</script>
   <style>
     :root {
       --blue:#009CDE;--blue-dark:#0077A8;--blue-light:#E5F6FF;
@@ -308,8 +308,18 @@ function render(){
   const isStale = m => !data[m]?.capturedAt || (Date.now() - ts(data[m].capturedAt)) > STALE_HOURS*3600000;
   const staleMkts = selectedMarkets().filter(m => data[m]?.capturedAt && isStale(m));
   const mkts = selectedMarkets().filter(m => !isStale(m));
-  const rows = mkts.flatMap(m => (data[m]?.latest||[]).filter(r=>r.ordered_revenue>0));
-  const prevRows = mkts.flatMap(m => (data[m]?.prev||[]).filter(r=>r.ordered_revenue>0));
+  // ZZ* rows are not products: ZZTOTAL000 = the report's own Total row, ZZDEBUG000 = diagnostics
+  const isProd = r => r.ordered_revenue>0 && !String(r.asin).startsWith('ZZ');
+  const rows = mkts.flatMap(m => (data[m]?.latest||[]).filter(isProd));
+  const prevRows = mkts.flatMap(m => (data[m]?.prev||[]).filter(isProd));
+  // Headline per market: Vendor Central's Total row when captured, otherwise the sum of rows
+  const mktTotals = mkts.map(m => {
+    const lr = data[m]?.latest||[];
+    const t = lr.find(r=>r.asin==='ZZTOTAL000');
+    const prod = lr.filter(isProd);
+    const sumRev = prod.reduce((s,r)=>s+r.ordered_revenue,0);
+    return { m, rev: t?t.ordered_revenue:sumRev, units: t?t.ordered_units:prod.reduce((s,r)=>s+(r.ordered_units||0),0), fromTotal:!!t, sumRev };
+  });
 
   // Per-market freshness line, so it's obvious if one market is stale
   document.getElementById('info-markets').textContent = MARKETS.map(m=>{
@@ -332,11 +342,11 @@ function render(){
   }
   const prevASINs=new Set(prevRows.map(r=>r.asin+'_'+r.market));
   rows.sort((a,b)=>b.ordered_revenue-a.ordered_revenue);
-  const totalRev=rows.reduce((s,r)=>s+toSelected(r.ordered_revenue,r.market),0);
-  const totalUnits=rows.reduce((s,r)=>s+(r.ordered_units||0),0);
+  const totalRev=mktTotals.reduce((s,t)=>s+toSelected(t.rev,t.m),0);
+  const totalUnits=mktTotals.reduce((s,t)=>s+t.units,0);
   const latestTime=rows.reduce((best,r)=>ts(r.captured_at)>ts(best)?r.captured_at:best,rows[0].captured_at);
   document.getElementById('stat-revenue').textContent=fmtTotal(totalRev);
-  document.getElementById('stat-revenue-sub').textContent=market==='all'?'GB + DE + FR':market+' only';
+  document.getElementById('stat-revenue-sub').textContent=mktTotals.map(t=>t.m+(t.fromTotal?' (VC total, '+Math.round(t.sumRev/(t.rev||1)*100)+'% in ASIN list)':' (sum of ASINs — VC total not captured)')).join(' · ');
   document.getElementById('stat-units').textContent=totalUnits.toLocaleString();
   document.getElementById('stat-asins').textContent=rows.length;
   document.getElementById('stat-captured').textContent=fmtTime(latestTime);
